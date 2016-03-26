@@ -1,0 +1,31 @@
+% lco-Datei, um das Corporate Layout der Uni Regensburg mit Hilfe der scrlttr2-Klasse zu erzeugen
+% Copyright 2015 by Marei Peischl
+%
+% This file may be distributed and/or modified
+% under the LaTeX Project Public License
+%
+%Version 1.1 (2015/06/15)
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% diese Einträge müssen für andere Personen angepasst werden: %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\ProvidesFile{Adressdaten.lco}    % Name der .lco-Datei, sollte irgendwie
+                                   % den Namen im Briefkopf bezeichnen
+
+%\setkomavar{fromlogo}{\ifboolean{UR@intern}{\includegraphics[width=12\x]{urlogotext}}{\includegraphics[width=12\x]{urlogotextintern}}}
+\setkomavar{fromname}{Max Mustermann} % Absendername
+\setkomavar{faculty}{Physik}%/\setkomavar{department}{Rechenzentrum}
+\setkomavar{fromname}{Marei Peischl} %Absendername
+\setkomavar{signature}{Marei Peischl} %Signatur
+\setkomavar{fromphone}{2924}
+\setkomavar{fromfax}{xxxx}
+\setkomavar{institute}[Institut für\ ]{Experimentelle und Angewandte Physik}
+%\setkomavar{chair}[Lehrstuhl\ ]{Professor Weiss}
+\setkomavar{officephone}{xxxx}
+\setkomavar{officefax}{xxxx}	
+\setkomavar{fromemail}{tex@ mareipeischl.de}
+\setkomavar{place}{Regensburg}
+
+\endinput
