@@ -1,0 +1,172 @@
+%% 
+%%  This is file `URspecialopts.sty' version 2.0 (2017/04/05),
+%%	it is part of
+%%  urcls -- Corporate Design for the University of Regensburg
+%% ----------------------------------------------------------------------------
+%%
+%%  Copyright (C) 2016--2017 by Marei Peischl <TeX@mareipeischl.de>
+%%
+%% ----------------------------------------------------------------------------
+%%  License information
+%% ----------------------------------------------------------------------------
+%%
+%% This work may be distributed and/or modified under the
+%% conditions of the LaTeX Project Public License, either version 1.3
+%% of this license or (at your option) any later version.
+%% The latest version of this license is in
+%%   http://www.latex-project.org/lppl.txt
+%% and version 1.3 or later is part of all distributions of LaTeX
+%% version 2005/12/01 or later.
+%%
+%% This work has the LPPL maintenance status `maintained'.
+%%
+%% The Current Maintainer of this work is Marei Peischl.
+%%
+%% ============================================================================
+%%
+%%  Dieses Werk darf nach den Bedingungen der LaTeX Project Public Lizenz
+%%  in der Version 1.3c, verteilt und/oder verändert werden. Die aktuelle
+%%  Version dieser Lizenz ist http://www.latex-project.org/lppl.txt und
+%%  Version 1.3c oder neuer ist Teil aller LaTeX-Distributionen ab 2005/12/01. 
+%%  Dieses Werk hat den LPPL-Verwaltungs-Status "maintained". 
+%%  Die Verwaltung liegt aktuell bei der Autorin, Marei Peischl.
+%%
+%% ----------------------------------------------------------------------------
+%%  End of license information
+%% ----------------------------------------------------------------------------
+%%
+
+\NeedsTeXFormat{LaTeX2e}
+\def\fileversion{2.0}
+\def\filedate{2017/04/05}
+
+\RequirePackage{expl3}
+\ProvidesExplPackage{URspecialopts}{\filedate}{\fileversion}{Implementation of keyval-options accepting multiple values as grouped clists}
+
+\RequirePackage{l3keys2e}
+\RequirePackage{xparse}
+
+%defining Keys for specialopts own Options:
+\keys_define:nn { specialopts.sty }
+{
+	%enabling passkeyprocessing (initially true)
+	passkey .bool_set:N = \l_specialopts@PassKey_bool,
+	passkey .default:n = true,
+	passkey .initial:n = true,
+
+	special .bool_set:N = \l_specialopts@Special_bool,
+	special .default:n = true,
+	special .initial:n = true
+}
+
+
+\ProcessKeysPackageOptions{ specialopts.sty }
+
+\NewDocumentCommand\Define@specialopt@Module{O{\@currname.\@currext}}{
+	\bool_if:NT \l_specialopts@Special_bool {\clist_new:c {l_#1@SpecialKey_clist}}
+	\bool_if:NT \l_specialopts@PassKey_bool {\clist_new:c {l_#1@PassKey_clist}}
+}
+
+\NewDocumentCommand\Module@DefineSpecialPassKey{O{\@currname.\@currext}md<>}{
+	\clist_put_right:cx {l_#1@PassKey_clist} {#2}
+	\tl_new:c {l_#1@#2@values_tl}
+	\IfNoValueF{#3}{\tl_new:c {l_#1@#2@package_tl} \tl_set:cn {l_#1@#2@package_tl} {#3}}
+}
+
+\cs_new:Nn \specialopt_Parse@OptionValue:n {\tl_if_empty:nF {#1} {=#1}}
+
+\NewDocumentCommand\Module@DeclarePassOption{sO{\@currname.\@currext}mO{}m}{
+	\exp_args:Nx	\keys_define:nn {#2} {
+		#3 .code:n = {\IfBooleanTF{#1}
+			{\PassOptionsToClass{#3\specialopt_Parse@OptionValue:n {##1}}{#5}}
+			{\PassOptionsToPackage{#3\specialopt_Parse@OptionValue:n {##1}}{#5}}
+		},
+	}
+}
+
+% Define a SpecialKey (#2) using code (#3) 
+% the code inside #3 can use one Argument   (#1) 
+% the Argument will be the token list containing the values
+\NewDocumentCommand\Module@DefineSpecialKey{O{\@currname.\@currext}mm}{
+	\clist_put_right:cx {l_#1@SpecialKey_clist} {#2}
+	\tl_new:c {l_#1@#2@values_tl}
+	\cs_new:cpn {SpecialKey_#1@#2_code:c} ##1 {#3} 
+}
+
+
+%[Module]{clist-item: Names to Filter}{clist-item: unprocessed Options}
+% remove all specialopts from unprocessed options
+\cs_new:Npn \Module@Options@Filter:xcc [#1]#2#3 {
+%	\clist_show:c {#2}
+%	\clist_show:c {#3}
+	\clist_set_eq:Nc \l_specialopts_Compare@Key_clist {#2}
+	\clist_clear:N \l_specialopts_unprocessed@Key_clist
+	\tl_set:Nx \l_specialopts_CompareModule_tl {#1}
+	\exp_args:NNNx \keyval_parse:NNn  \specialopts_Compare@KeyLists:n \specialopts_Compare@KeyLists:nn {\clist_use:cn {#3} {,}}
+	\clist_set_eq:cN {#3} \l_specialopts_unprocessed@Key_clist
+%	\clist_show:c {#3}
+}
+
+\msg_new:nnn {URspecialopts.sty} {no-specialopt-value} {You entered a specialopt or pass key (#1) without any value. \\\\
+	Ignoring this key.
+}
+
+%Variant for Keys without values
+\cs_new:Nn \specialopts_Compare@KeyLists:n {
+	\clist_if_in:NnTF \l_specialopts_Compare@Key_clist {#1} 
+		{\msg_warning:nnn {URspecialopts.sty} {no-specialopt-value} {#1}}
+		{\clist_put_right:Nx \l_specialopts_unprocessed@Key_clist {#1}}
+	}
+
+%Variante for Keys with values
+\cs_new:Nn \specialopts_Compare@KeyLists:nn {
+	\clist_if_in:NnTF \l_specialopts_Compare@Key_clist {#1}
+		{\tl_put_right:cx {l_\l_specialopts_CompareModule_tl @#1@values_tl}{#2}}
+		{
+			\tl_if_in:nnTF {#2} {,}
+				{\clist_put_right:Nx \l_specialopts_unprocessed@Key_clist {#1={#2}}}
+				{\clist_put_right:Nx \l_specialopts_unprocessed@Key_clist {#1=#2}}
+		}
+	}
+
+
+%Create Module@Process@SpecialOptions [module]
+\bool_lazy_any:nTF {{\l_specialopts@PassKey_bool} {\l_specialopts@Special_bool}}
+{
+	\NewDocumentCommand{\Module@Process@SpecialOptions}{O{\@currname.\@currext}}{
+		\clist_new:c {l_#1@unprocessed_clist}
+		\clist_set:cx {l_#1@unprocessed_clist} {\@ptionlist{\@currname.\@currext}}
+		\bool_if:NTF \l_specialopts@PassKey_bool {
+			\clist_if_empty:cF {l_#1@PassKey_clist}{
+				\Module@Options@Filter:xcc [#1]{l_#1@PassKey_clist}{l_#1@unprocessed_clist}
+				\clist_map_inline:cn {l_#1@PassKey_clist} {
+					\exp_args:Nc \tl_if_blank:VF {l_#1@##1@values_tl}{
+						\PassOptionsToPackage{\tl_use:c {l_#1@##1@values_tl}}{
+							\tl_if_exist:cTF {l_#1@##1@package_tl}
+								{\tl_use:c {l_#1@##1@package_tl}}
+								{##1}
+						}
+					}
+				}
+			}
+		}
+		{\clist_if_empty:cF {l_#1@PassKey_clist}}
+	\bool_if:NT \l_specialopts@Special_bool {
+		\clist_if_empty:cF {l_#1@SpecialKey_clist}{
+			\Module@Options@Filter:xcc [#1]{l_#1@SpecialKey_clist}{l_#1@unprocessed_clist}
+			\clist_map_inline:cn {l_#1@SpecialKey_clist} {
+				\exp_args:Nnc \use:c {SpecialKey_#1@##1_code:c} {l_#1@##1@values_tl}
+			}
+		}
+	}
+	\expandafter\edef\csname opt@\@currname.\@currext\endcsname{\clist_use:cn {l_#1@unprocessed_clist} {,}}%{\tl_use:N \l_tmpb_tl}
+	\if_meaning:w\@currext\@clsextension
+	\edef\@classoptionslist{\clist_use:cn {l_#1@unprocessed_clist} {,}}
+	\fi:	
+	}
+}{
+	\let\Module@Process@SpecialOptions\relax
+}
+\ExplSyntaxOff
+
+\endinput

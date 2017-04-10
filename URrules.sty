@@ -1,0 +1,304 @@
+%% 
+%%  This is file `URrules.sty' version 2.0 (2017/04/05),
+%%	it is part of
+%%  urcls -- Corporate Design for the University of Regensburg
+%% ----------------------------------------------------------------------------
+%%
+%%  Copyright (C) 2016--2017 by Marei Peischl <TeX@mareipeischl.de>
+%%
+%% ----------------------------------------------------------------------------
+%%  License information
+%% ----------------------------------------------------------------------------
+%%
+%% This work may be distributed and/or modified under the
+%% conditions of the LaTeX Project Public License, either version 1.3
+%% of this license or (at your option) any later version.
+%% The latest version of this license is in
+%%   http://www.latex-project.org/lppl.txt
+%% and version 1.3 or later is part of all distributions of LaTeX
+%% version 2005/12/01 or later.
+%%
+%% This work has the LPPL maintenance status `maintained'.
+%%
+%% The Current Maintainer of this work is Marei Peischl.
+%%
+%% ============================================================================
+%%
+%%  Dieses Werk darf nach den Bedingungen der LaTeX Project Public Lizenz
+%%  in der Version 1.3c, verteilt und/oder verändert werden. Die aktuelle
+%%  Version dieser Lizenz ist http://www.latex-project.org/lppl.txt und
+%%  Version 1.3c oder neuer ist Teil aller LaTeX-Distributionen ab 2005/12/01. 
+%%  Dieses Werk hat den LPPL-Verwaltungs-Status "maintained". 
+%%  Die Verwaltung liegt aktuell bei der Autorin, Marei Peischl.
+%%
+%% ----------------------------------------------------------------------------
+%%  End of license information
+%% ----------------------------------------------------------------------------
+%%
+
+\NeedsTeXFormat{LaTeX2e}
+\def\fileversion{2.0}
+\def\filedate{2017/04/05}
+
+\RequirePackage{expl3}
+\ProvidesExplPackage{URrules}{\filedate}{\fileversion}{Creation of colored bars for urcls-bundle}
+   
+\RequirePackage{URoptions}
+
+\ExplSyntaxOn
+
+
+\Define@specialopt@Module
+
+\int_new:N \g_UR@dep_int
+\int_new:N \l_UR@temp_int
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%Optionen zum aktivieren einzelner Farben
+
+\int_zero:N \l_UR@temp_int
+\prop_new:N \g_UR@DepNumKeys_prop
+
+
+\clist_map_inline:Nn \g_UR@dep_clist {
+	\int_incr:N \l_UR@temp_int
+	\UR_Define@BoolKey [dep\int_use:N \l_UR@temp_int] {#1}
+	\prop_put:Nnx \g_UR@DepNumKeys_prop	{#1} {\int_use:N \l_UR@temp_int}
+}
+
+%Sammelaktivierung: all=alle Farben, faculties=alle 11 Fakultäten
+\UR_new@BoolOpt{all}
+\UR_new@BoolOpt{faculties}
+
+\UR_Define@Key:n {
+	logo .code:n = {\def\UR@opt@logo{#1}},
+	colors .code:n = {\UR_Set@Key:n {#1}}
+}
+
+\UR_new@BoolOpt{beamer}%beamerspezifische Definitionen
+
+%Tonersparender Briefkopf oder draft
+\UR_new@BoolOpt{intern}
+\UR_new@BoolOpt[intern]{draft}
+\UR_Define@ComplementaryKey[intern]{final}
+
+\UR_new@BoolOpt{origlayout}%Linien mit demselben Spacing, wie die Titelseitenlayouts
+
+\UR_Define@Key:n {
+	all .code:n = {\clist_map_inline:nn 
+		{lov,ffg,asz,rw,ww,kt,pkgg,pps,slk,bvm,mat,ph,chp,med,ub,zsk,eur,zhw,rul,zfw,spo,rz}
+		{\bool_gset_true:c {g_UR@dep\prop_item:Nn \g_UR@DepNumKeys_prop {##1}_bool}}
+	},
+	faculties .code:n = {\clist_map_inline:nn 
+		{rw,ww,kt,pkgg,pps,slk,bvm,mat,ph,chp,med}
+		{\bool_gset_true:c {g_UR@dep\prop_item:Nn \g_UR@DepNumKeys_prop {##1}_bool}}
+	}
+}
+
+
+\Module@Process@SpecialOptions
+\exp_args:Nx \ProcessKeysOptions { \@currname.\@currext }
+
+
+
+\int_set:Nn \l_UR@temp_int {1}
+\int_while_do:nn {\l_UR@temp_int<\clist_count:N \g_UR@dep_clist} {%
+	\bool_if:cT{g_UR@dep\int_use:N\l_UR@temp_int _bool}{\int_gincr:N \g_UR@dep_int
+		}
+	\int_incr:N \l_UR@temp_int
+}
+
+
+\RequirePackage{tikz}
+\RequirePackage{URcolors}
+
+%Längen
+%%%Skalierung des Logos & Titelblocks
+%%halber Radius der Kugel
+\expandafter\ifx\csname UR@title@halfradius\endcsname\relax
+\newlength{\UR@title@halfradius}
+\setlength{\UR@title@halfradius}{\dimexpr\paperwidth/42\relax}
+\fi
+
+\box_new:N \UR@titlelogo@box
+\cs_if_exist:NTF \UR@opt@logo
+	{\exp_args:Nx \tl_if_eq:nnTF {\UR@opt@logo} {fsimphy}
+		{\hbox_set:Nn \UR@titlelogo@box {\includegraphics[width=12\UR@title@halfradius]{FSIlogotext}}}
+		{\hbox_set:Nn \UR@titlelogo@box {\includegraphics[width=12\UR@title@halfradius]{\UR@opt@logo}}}
+	}
+	{\bool_if:NTF \g_UR@intern_bool
+		{\hbox_set:Nn \UR@titlelogo@box {\includegraphics[width=12\UR@title@halfradius]{urlogotextintern}}}
+		{\hbox_set:Nn \UR@titlelogo@box {\includegraphics[width=12\UR@title@halfradius]{urlogotext}}}
+	}
+%		\bool_if:cTF {g_UR@dep23_bool}
+%		{\hbox_set:Nn \UR@titlelogo@box {\includegraphics[width=12\UR@title@halfradius]{FSIlogotext}}}
+%		{\bool_if:NTF \g_UR@intern_bool
+%			{\hbox_set:Nn \UR@titlelogo@box {\includegraphics[width=12\UR@title@halfradius]{urlogotextintern}}}
+%			{\hbox_set:Nn \UR@titlelogo@box {\includegraphics[width=12\UR@title@halfradius]{urlogotext}}}
+%		}
+%	}
+	
+
+
+
+%Style für die Logos
+\tikzset{UR@logo/.style={inner~sep=0pt, anchor=north~west, outer~sep=0pt},
+	UR@linewidth/.style={line~width=.4pt}
+	}
+
+
+%Warning bei fehlender Farboptionenangabe
+\int_compare:nT {\g_UR@dep_int = 0}{
+	\msg_new:nnn {URrules.sty} {nocolor} {You~didn't~specify~a~color~option.~The~usually~colored~area~is~set~empty.}
+	\msg_warning:nn {URrules.sty} {nocolor}
+}
+
+%Definition der Längen für die Konstruktion der Boxen & Linien
+\dim_new:N \l_UR@linelength_dim
+\dim_new:N \l_UR@linewidth_dim
+\dim_new:N \l_UR@colorlength_dim
+\int_new:N \l_UR@color_int
+
+%Definition von \UR@create@linebox*[Dicke]<Länge>{csname}
+\NewDocumentCommand\UR@create@linebox{sO{3pt}D<>{\paperwidth-10\UR@title@halfradius}m}{
+	\dim_set:Nn \l_UR@linewidth_dim {#2}
+	\dim_set:Nn \l_UR@linelength_dim {#3}
+	\dim_set:Nn \l_UR@linelength_dim {.5\l_UR@linelength_dim}
+	\box_new:c {#4}
+	\if_bool:N \g_UR@intern_bool
+			\hbox_gset:cn {#4}{
+				\begin{tikzpicture}[UR@linewidth]
+				\IfBooleanTF{#1}
+					{\useasboundingbox (0,0) rectangle (-\dimexpr 10\UR@title@halfradius-1in-\hoffset-\oddsidemargin\relax,-\l_UR@linewidth_dim);}
+					{\useasboundingbox (0,0) rectangle (2\l_UR@linelength_dim,-\l_UR@linewidth_dim);}
+				\fill[UR@reingrau](0,0)rectangle(\l_UR@linelength_dim,-\l_UR@linewidth_dim);
+				\draw[UR@reingrau](\l_UR@linelength_dim,\dimexpr-\l_UR@linewidth_dim+.5\pgflinewidth\relax)--(\dimexpr2\l_UR@linelength_dim-.5\pgflinewidth\relax,\dimexpr-\l_UR@linewidth_dim+.5\pgflinewidth\relax)--(\dimexpr2\l_UR@linelength_dim-.5\pgflinewidth\relax,-.5\pgflinewidth)--(\l_UR@linelength_dim,-.5\pgflinewidth);
+				\end{tikzpicture}
+				}
+	\else:
+		\int_zero:N \l_UR@color_int
+		\int_set:Nn \l_UR@temp_int {1}
+		\hbox_gset:cn {#4}
+		{
+			\begin{tikzpicture}[baseline=(current~bounding~box.center)]
+			\IfBooleanTF{#1}
+				{\useasboundingbox (0,0) rectangle (-\dimexpr 10\UR@title@halfradius-1in-\hoffset-\oddsidemargin\relax,-\l_UR@linewidth_dim);}
+				{\useasboundingbox (0,0) rectangle (2\l_UR@linelength_dim,-\l_UR@linewidth_dim);}
+			\fill[UR@reingrau](0,0)rectangle+(\l_UR@linelength_dim,-\l_UR@linewidth_dim);
+			\coordinate(grauerstreifen) at (\l_UR@linelength_dim,-\l_UR@linewidth_dim);
+			\int_compare:nF {\g_UR@dep_int = 0}
+			{
+				\dim_set:Nn \l_UR@colorlength_dim {\l_UR@linelength_dim/\g_UR@dep_int}
+				\int_while_do:nn {\l_UR@temp_int<24}{%
+					\exp_after:wN \if_bool:N \cs:w g_UR@dep\int_use:N\l_UR@temp_int _bool\cs_end:
+						\fill[UR@color@\int_use:N \l_UR@temp_int](grauerstreifen)++(\l_UR@color_int\l_UR@colorlength_dim,0)rectangle+(\l_UR@colorlength_dim,\l_UR@linewidth_dim);
+						\int_incr:N \l_UR@color_int
+					\fi:
+					\int_incr:N \l_UR@temp_int
+				}
+			}
+			\end{tikzpicture}%
+		}
+	\fi:
+}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%Definition von \UR@create@colorlinebox[Dicke]<Länge>{csname}
+\NewDocumentCommand\UR@create@colorlinebox{O{3pt}D<>{\paperwidth-10\UR@title@halfradius}m}{
+	\dim_set:Nn \l_UR@linewidth_dim {#1}
+	\dim_set:Nn \l_UR@linelength_dim {#2}
+	\box_new:c {#3}
+	\if_bool:N \g_UR@intern_bool
+	\hbox_gset:cn {#3}
+	{
+		\begin{tikzpicture}[UR@linewidth]
+		\useasboundingbox[clip] (0,0) rectangle (\l_UR@linelength_dim,-\l_UR@linewidth_dim);
+		\draw(.5\pgflinewidth,.5\pgflinewidth) rectangle (\dimexpr\l_UR@linelength_dim-.5\pgflinewidth,\dimexpr-\l_UR@linewidth_dim+.5\pgflinewidth\relax);
+		\end{tikzpicture}
+	}
+	\else:
+	\int_compare:nF {\g_UR@dep_int = 0}{\dim_set:Nn \l_UR@colorlength_dim {\l_UR@linelength_dim/\g_UR@dep_int}
+	\int_zero:N \l_UR@color_int
+	\int_set:Nn \l_UR@temp_int {1}
+	\hbox_gset:cn {#3}
+	{
+		\begin{tikzpicture}
+		\useasboundingbox (0,0) rectangle (\l_UR@linelength_dim,-\l_UR@linewidth_dim);
+		\int_while_do:nn {\l_UR@temp_int<24}{%
+			\exp_after:wN \if_bool:N \cs:w g_UR@dep\int_use:N\l_UR@temp_int _bool\cs_end:
+			\path[fill=UR@color@\int_use:N \l_UR@temp_int](\l_UR@color_int\l_UR@colorlength_dim,0)rectangle++(\l_UR@colorlength_dim,-\l_UR@linewidth_dim);
+			\int_incr:N \l_UR@color_int
+			\fi:
+			\int_incr:N \l_UR@temp_int
+		}
+		\end{tikzpicture}%
+	}
+	}
+	\fi:
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%Definition von \UR@create@titlebox{csname}
+\NewDocumentCommand\UR@create@titlebox{m}{
+	\dim_set:Nn \l_UR@linelength_dim {(\paperwidth-10\UR@title@halfradius)/2}
+%	\int_compare:nT {\g_UR@dep_int != 0}{\dim_set:Nn \l_UR@colorlength_dim {\l_UR@linelength_dim/\g_UR@dep_int}}
+	\box_new:c {#1}
+\if_bool:N \g_UR@intern_bool
+			\hbox_gset:cn {#1} 
+	{
+			%schwarz weißer Kopf für interne Verwendung
+			\begin{tikzpicture}[UR@linewidth]
+			\useasboundingbox (0,0) rectangle (\paperwidth,-7\UR@title@halfradius);
+			\draw(10\UR@title@halfradius,-\UR@title@halfradius)--++(0,-2\UR@title@halfradius)--++(.98\l_UR@linelength_dim,0)++(.02\l_UR@linelength_dim,2\UR@title@halfradius)--++(0,-2\UR@title@halfradius)--++(\l_UR@linelength_dim,0);
+			\draw(3\UR@title@halfradius,-1\UR@title@halfradius)node[UR@logo]{\usebox\UR@titlelogo@box};%\pgfuseimage{titlelogo}};
+			\end{tikzpicture}
+	}
+\else:
+		\int_zero:N \l_UR@color_int
+		\int_set:Nn \l_UR@temp_int {1}
+		\hbox_gset:cn {#1} 
+		{
+%		%Farbiger Kopf
+			\begin{tikzpicture}
+			\useasboundingbox (0,0) rectangle (\paperwidth,-7\UR@title@halfradius);
+			\path[fill=UR@reingrau](10\UR@title@halfradius,0)rectangle++(\l_UR@linelength_dim,-3\UR@title@halfradius);
+			\coordinate(grauerstreifen) at (10\UR@title@halfradius+\l_UR@linelength_dim,-3\UR@title@halfradius);
+			\node[UR@logo] at (3\UR@title@halfradius,-\UR@title@halfradius) {\usebox\UR@titlelogo@box};%\pgfuseimage{titlelogo}};
+			\int_compare:nF {\g_UR@dep_int = 0}
+%			{\UR@nocolorwarn}
+			{
+				\dim_set:Nn \l_UR@colorlength_dim {\l_UR@linelength_dim/\g_UR@dep_int}
+				\int_while_do:nn {\l_UR@temp_int<24}
+				{
+					\exp_after:wN \if_bool:N \cs:w g_UR@dep\int_use:N\l_UR@temp_int _bool\cs_end:
+						\path[fill=UR@color@\int_use:N \l_UR@temp_int](grauerstreifen)++(\l_UR@color_int\l_UR@colorlength_dim,0)rectangle+(\l_UR@colorlength_dim,3\UR@title@halfradius);
+						\int_incr:N \l_UR@color_int
+					\fi:
+				\int_incr:N \l_UR@temp_int
+				}
+			}
+			\end{tikzpicture}
+		}
+\fi:
+	}
+
+%\URrule{department clist}{width}{height}
+\NewDocumentCommand\URrule{mmm}{
+	\bool_if:NTF \g_UR@intern_bool {
+		\textcolor{UR@reingrau}{\rule{#2}{#3}}
+	}{
+	\begin{tikzpicture}
+	\coordinate(nextpos) at (0,0);
+	\clist_map_inline:nn {#1} {
+		\prop_get:NnN \g_UR@DepNumKeys_prop {##1} \l_tmpa_tl
+		\path[fill=UR@color@\csname l_tmpa_tl\endcsname](nextpos)rectangle++({#2/\clist_count:n {#1}},#3)++(0,-#3)coordinate(nextpos);
+	}
+	\end{tikzpicture}
+	}
+}
+
+
+\ExplSyntaxOff
+
+
+\endinput
+

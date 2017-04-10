@@ -1,0 +1,169 @@
+%% 
+%%  This is file `URpagestyles.sty' version 2.0 (2017/04/05),
+%%	it is part of
+%%  urcls -- Corporate Design for the University of Regensburg
+%% ----------------------------------------------------------------------------
+%%
+%%  Copyright (C) 2016--2017 by Marei Peischl <TeX@mareipeischl.de>
+%%
+%% ----------------------------------------------------------------------------
+%%  License information
+%% ----------------------------------------------------------------------------
+%%
+%% This work may be distributed and/or modified under the
+%% conditions of the LaTeX Project Public License, either version 1.3
+%% of this license or (at your option) any later version.
+%% The latest version of this license is in
+%%   http://www.latex-project.org/lppl.txt
+%% and version 1.3 or later is part of all distributions of LaTeX
+%% version 2005/12/01 or later.
+%%
+%% This work has the LPPL maintenance status `maintained'.
+%%
+%% The Current Maintainer of this work is Marei Peischl.
+%%
+%% ============================================================================
+%%
+%%  Dieses Werk darf nach den Bedingungen der LaTeX Project Public Lizenz
+%%  in der Version 1.3c, verteilt und/oder verändert werden. Die aktuelle
+%%  Version dieser Lizenz ist http://www.latex-project.org/lppl.txt und
+%%  Version 1.3c oder neuer ist Teil aller LaTeX-Distributionen ab 2005/12/01. 
+%%  Dieses Werk hat den LPPL-Verwaltungs-Status "maintained". 
+%%  Die Verwaltung liegt aktuell bei der Autorin, Marei Peischl.
+%%
+%% ----------------------------------------------------------------------------
+%%  End of license information
+%% ----------------------------------------------------------------------------
+%%
+
+\NeedsTeXFormat{LaTeX2e}
+\def\fileversion{2.0}
+\def\filedate{2017/04/05}
+
+\RequirePackage{expl3}
+\ProvidesExplPackage{URpagestyles}{\filedate}{\fileversion}{Pagestyles adapting the corporate design of the University of Regensburg}
+
+\RequirePackage{URoptions}
+
+\Define@specialopt@Module
+
+\UR_new@BoolOpt{origlayout}
+
+
+\Module@DeclarePassOption{automark}{scrlayer-scrpage}
+
+\clist_map_inline:nn {logo,draft,intern,final}{\Module@DeclarePassOption{#1}{URrules}}
+
+%KeyVal-Options for passing on to automatically loaded packages
+\Module@DefineSpecialPassKey{URrules}
+\Module@DefineSpecialPassKey{URcolors}
+\Module@DefineSpecialPassKey{scrlayer-scrpage}
+\Module@DefineSpecialPassKey{scrlayer}
+
+\UR@DeclareColorOptions
+
+
+
+%Key=Value Passing to Package
+\clist_map_inline:nn {headsepline,headtopline,footsetline,footbotline}{\Module@DeclarePassOption{#1}{scrlayer-scrpage}}
+
+
+\Module@Process@SpecialOptions
+\exp_args:Nx \ProcessKeysOptions { \@currname.\@currext }
+
+	
+\RequirePackage{URrules}
+\RequirePackage{scrlayer-scrpage}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%Titelseitenstil
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\UR@create@titlebox{UR@titlebox}
+
+\DeclareNewLayer[align=lt,area={0pt}{0pt}{\paperwidth}{7\UR@title@halfradius},foreground,contents={
+	\usebox\UR@titlebox
+}]{UR.titlehead}
+
+\DeclareNewPageStyleByLayers{URtitle}{UR.titlehead}
+	
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%Seitenstile URheadings und plain.URheadings
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newpairofpagestyles[scrheadings]{URheadings}{}
+
+\newcommand{\UR@koma@rule}[1]{%
+	 \begingroup
+	 \normalfont
+	    	\vbox to \z@{%
+	    		\kern -\dimexpr \csname sls@#1@linethickness\endcsname\relax%height
+	    		\ifnum \sls@hfline@adjust>\z@ \@tempswatrue \else \@tempswafalse\fi
+	    		\if@twoside\ifodd\value{page}\else
+	    		\ifnum \sls@hfline@adjust<\tw@ \@tempswatrue\else \@tempswafalse\fi
+	    		\fi\fi
+	    		\if@tempswa
+	    		\hskip \z@\@plus 1fill\@minus \paperwidth
+	    		\fi
+	    		\if@twoside\ifodd\value{page}
+	    		\expandafter\usebox\csname UR@koma@#1\endcsname
+	    		\else
+	    		\reflectbox{\expandafter\usebox\csname UR@koma@#1\endcsname}
+	    		\fi
+	    		\else
+	    		\expandafter\usebox\csname UR@koma@#1\endcsname
+	    		\fi
+	    		\ifnum \sls@hfline@adjust<\tw@ \@tempswatrue\else \@tempswafalse\fi
+	    		\if@twoside\ifodd\value{page}\else
+	    		\ifnum \sls@hfline@adjust>\z@ \@tempswatrue \else \@tempswafalse\fi
+	    		\fi\fi
+	    		\if@tempswa
+	    		\hskip \z@\@plus 1fill\@minus \paperwidth\null
+	    		\fi
+	 }%
+	 \endgroup
+	}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%Linienebenendeklaration
+\NewDocumentCommand{\UR@line@DeclareLayer}
+{mm}{%head/foot; above/below;%opt:align tl bei headsepline; 4background/forground; voffset
+\AtBeginDocument{
+\expandafter\ifdim\dimexpr\csname sls@#1#2@linethickness\endcsname\relax=\z@
+	\expandafter\newsavebox\csname UR@koma@#1#2\endcsname
+\else
+	\bool_if:NTF \g_UR@origlayout_bool
+		{\UR@create@linebox*[\csname sls@#1#2@linethickness\endcsname]{UR@koma@#1#2}}
+		{\UR@create@linebox[\csname sls@#1#2@linethickness\endcsname]<\csname sls@#1#2@linelength\endcsname>{UR@koma@#1#2}}
+\fi
+}
+\ModifyLayer[contents={\UR@koma@rule{#1#2}}]{URheadings.#1.#2.line}
+\ModifyLayer[contents={\UR@koma@rule{#1#2}}]{plain.URheadings.#1.#2.line}
+}
+
+\UR@line@DeclareLayer{head}{above}
+\UR@line@DeclareLayer{head}{below}
+\UR@line@DeclareLayer{foot}{above}
+\UR@line@DeclareLayer{foot}{below}
+
+\AtEndOfPackage{
+	\pagestyle{URheadings}
+	\clearpairofpagestyles
+	\ohead{\headmark}
+	\ofoot[\if@twoside\pagemark\fi]{\if@twoside\pagemark\fi}%
+	\cfoot[\if@twoside\else\pagemark\fi]{\if@twoside\else\pagemark\fi}%
+	}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%origlayout: Linien so positioniert, wie auf der Titelseite
+\bool_if:NT \g_UR@origlayout_bool {\KOMAoptions{ilines}} 
+
+
+\endinput

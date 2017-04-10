@@ -1,76 +1,72 @@
-% Copyright 2014-2015 by Marei Peischl
-%
-% This file may be distributed and/or modified
-% under the LaTeX Project Public License
+%% 
+%%  This is file `URbeamer.cls' version 2.0 (2017/04/05),
+%%	it is part of
+%%  urcls -- Corporate Design for the University of Regensburg
+%% ----------------------------------------------------------------------------
+%%
+%%  Copyright (C) 2014--2017 by Marei Peischl <TeX@mareipeischl.de>
+%%
+%% ----------------------------------------------------------------------------
+%%  License information
+%% ----------------------------------------------------------------------------
+%%
+%% This work may be distributed and/or modified under the
+%% conditions of the LaTeX Project Public License, either version 1.3
+%% of this license or (at your option) any later version.
+%% The latest version of this license is in
+%%   http://www.latex-project.org/lppl.txt
+%% and version 1.3 or later is part of all distributions of LaTeX
+%% version 2005/12/01 or later.
+%%
+%% This work has the LPPL maintenance status `maintained'.
+%%
+%% The Current Maintainer of this work is Marei Peischl.
+%%
+%% ============================================================================
+%%
+%%  Dieses Werk darf nach den Bedingungen der LaTeX Project Public Lizenz
+%%  in der Version 1.3c, verteilt und/oder verändert werden. Die aktuelle
+%%  Version dieser Lizenz ist http://www.latex-project.org/lppl.txt und
+%%  Version 1.3c oder neuer ist Teil aller LaTeX-Distributionen ab 2005/12/01. 
+%%  Dieses Werk hat den LPPL-Verwaltungs-Status "maintained". 
+%%  Die Verwaltung liegt aktuell bei der Autorin, Marei Peischl.
+%%
+%% ----------------------------------------------------------------------------
+%%  End of license information
+%% ----------------------------------------------------------------------------
+%%
+
 \NeedsTeXFormat{LaTeX2e}
-\def\fileversion{1.6}
-\def\filedate{2015/06/15}
-\ProvidesClass{URbeamer}
- [\filedate\space\fileversion\space
-   beamer basierte Dokumentenklasse im Corporate Design der Universität Regensburg]
+\def\fileversion{2.0}
+\def\filedate{2017/04/05}
 
-\RequirePackage{ifthen}
-\newboolean{UR@draft}
+\RequirePackage{expl3}
+\ProvidesExplClass {URbeamer} {\filedate} {\fileversion} {beamer based document class for the University of Regensburg}
 
+\RequirePackage{URoptions}
 
-% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %5 % % % % % % % % % % % % %
+\Define@specialopt@Module
 
-% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+\UR@DeclareColorOptions
+\UR@define@draftfinalkeys
 
-%Hausschriftart
-%\RequirePackage{frutigernext}
-\renewcommand*\familydefault{\sfdefault}
+\clist_map_inline:nn {headline,logotext,alignwithbar,framenumber,externalize,coloredboxes,depcaps,cdlayout} {\Module@DeclarePassOption {#1} {beamerouterthemeUR}}
 
-% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
-%%Optionen zum aktivieren einzelner Farben
-\DeclareOption{lov}{\PassOptionsToPackage{\CurrentOption}{beamerouterthemeUR}}
-\DeclareOption{ffg}{\PassOptionsToPackage{\CurrentOption}{beamerouterthemeUR}}
-\DeclareOption{asz}{\PassOptionsToPackage{\CurrentOption}{beamerouterthemeUR}}
-\DeclareOption{rw}{\PassOptionsToPackage{\CurrentOption}{beamerouterthemeUR}}
-\DeclareOption{ww}{\PassOptionsToPackage{\CurrentOption}{beamerouterthemeUR}}
-\DeclareOption{kt}{\PassOptionsToPackage{\CurrentOption}{beamerouterthemeUR}}
-\DeclareOption{pkgg}{\PassOptionsToPackage{\CurrentOption}{beamerouterthemeUR}}
-\DeclareOption{pps}{\PassOptionsToPackage{\CurrentOption}{beamerouterthemeUR}}
-\DeclareOption{slk}{\PassOptionsToPackage{\CurrentOption}{beamerouterthemeUR}}
-\DeclareOption{bvm}{\PassOptionsToPackage{\CurrentOption}{beamerouterthemeUR}}
-\DeclareOption{mat}{\PassOptionsToPackage{\CurrentOption}{beamerouterthemeUR}}
-\DeclareOption{ph}{\PassOptionsToPackage{\CurrentOption}{beamerouterthemeUR}}
-\DeclareOption{chp}{\PassOptionsToPackage{\CurrentOption}{beamerouterthemeUR}}
-\DeclareOption{med}{\PassOptionsToPackage{\CurrentOption}{beamerouterthemeUR}}
-\DeclareOption{ub}{\PassOptionsToPackage{\CurrentOption}{beamerouterthemeUR}}
-\DeclareOption{zsk}{\PassOptionsToPackage{\CurrentOption}{beamerouterthemeUR}}
-\DeclareOption{eur}{\PassOptionsToPackage{\CurrentOption}{beamerouterthemeUR}}
-\DeclareOption{zhw}{\PassOptionsToPackage{\CurrentOption}{beamerouterthemeUR}}
-\DeclareOption{rul}{\PassOptionsToPackage{\CurrentOption}{beamerouterthemeUR}}
-\DeclareOption{zfw}{\PassOptionsToPackage{\CurrentOption}{beamerouterthemeUR}}
-\DeclareOption{spo}{\PassOptionsToPackage{\CurrentOption}{beamerouterthemeUR}}
-\DeclareOption{rz}{\PassOptionsToPackage{\CurrentOption}{beamerouterthemeUR}}
-\DeclareOption{fsimphy}{\PassOptionsToPackage{\CurrentOption}{beamerouterthemeUR}}
-\DeclareOption{externalize}{\PassOptionsToPackage{\CurrentOption}{beamerouterthemeUR}}
-%%Sammelaktivierung: all=alle Farben, faculties=alle 11 Fakultäten
-\DeclareOption{all}{\PassOptionsToPackage{\CurrentOption}{beamerouterthemeUR}}
-\DeclareOption{faculties}{\PassOptionsToPackage{\CurrentOption}{beamerouterthemeUR}}
-\DeclareOption{coloredboxes}{\PassOptionesToPackage{\CurrentOption}{beamerouterthemeUR}}
-\DeclareOption{draft}{\setboolean{UR@draft}{true}\PassOptionsToClass{draft}{beamer}}
-\DeclareOption{handout}{\PassOptionsToClass{handout}{beamer}}
+\Module@DeclarePassOption {logo} [] {URrules}
+\Module@DeclarePassOption {intern} {URrules}
 \DeclareOption*{\PassOptionsToClass{\CurrentOption}{beamer}}
+
+
+\Module@Process@SpecialOptions
+
 \ProcessOptions\relax
-\LoadClass[xcolor=table,covered,hyperref={bookmarks,colorlinks}]{beamer}
-%Laden der notwendigen Ergänzungspakete
-\RequirePackage{graphicx}
-% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %5
-\mode<presentation>%refers to the first four modes (beamer,handout,second and trans). That is, to all modes except the article mode
-{
+
+\edef\UR@beamer@saveclsopts{\@classoptionslist}
+\LoadClass[xcolor=table,hyperref={bookmarks,hidelinks}]{beamer}
+\edef\@classoptionslist{\UR@beamer@saveclsopts}
+
+\mode<presentation>{
    \usetheme{UR}
-%    	
-%    	
-   	\def\maketitle{
-   		\ifbeamer@inframe\titlepage\else\frame{\titlepage}\fi}
-   	
-
-
-
-\setbeamertemplate{navigation symbols}{}
 }
 
 \mode<all>

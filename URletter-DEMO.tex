@@ -1,0 +1,194 @@
+%% 
+%%  This is file `URletter-DEMO.tex' version 2.0 (2017/04/05),
+%%	it is part of
+%%  urcls -- Corporate Design for the University of Regensburg
+%% ----------------------------------------------------------------------------
+%%
+%%  Copyright (C) 2016--2017 by Marei Peischl <TeX@mareipeischl.de>
+%%
+%% ----------------------------------------------------------------------------
+%%  License information
+%% ----------------------------------------------------------------------------
+%%
+%% This work may be distributed and/or modified under the
+%% conditions of the LaTeX Project Public License, either version 1.3
+%% of this license or (at your option) any later version.
+%% The latest version of this license is in
+%%   http://www.latex-project.org/lppl.txt
+%% and version 1.3 or later is part of all distributions of LaTeX
+%% version 2005/12/01 or later.
+%%
+%% This work has the LPPL maintenance status `maintained'.
+%%
+%% The Current Maintainer of this work is Marei Peischl.
+%%
+%% ============================================================================
+%%
+%%  Dieses Werk darf nach den Bedingungen der LaTeX Project Public Lizenz
+%%  in der Version 1.3c, verteilt und/oder verändert werden. Die aktuelle
+%%  Version dieser Lizenz ist http://www.latex-project.org/lppl.txt und
+%%  Version 1.3c oder neuer ist Teil aller LaTeX-Distributionen ab 2005/12/01. 
+%%  Dieses Werk hat den LPPL-Verwaltungs-Status "maintained". 
+%%  Die Verwaltung liegt aktuell bei der Autorin, Marei Peischl.
+%%
+%% ----------------------------------------------------------------------------
+%%  End of license information
+%% ----------------------------------------------------------------------------
+%%
+%%Diese Datei dient als Demonstration zu Umsetzung der Gestaltungsrichtlinien zum Corporate Design der Universität Regensburg in LaTeX.
+%%Die Dateien werden in ihrer aktuellen Form bereitgestellt, allerdings übernimmt die Autorin keinerlei Verantwortung für die Verwendung.
+%%Bei Fragen, Wünschen oder Anregungen freue ich mich über eine Email: TeX@mareipeischl.de
+%%Selbiges gilt, wenn Sie daran interessiert sind, die Weiterentwicklung sowie die Verbesserung der Dokumentation zu unterstützen.
+%%
+\documentclass[ngerman,parskip=half,colors={faculties,rz},headline=color]{URletter}
+
+
+\usepackage{iftex}%automatische Auswahl des richtigen Fontloaders und der Eingabekodierung
+%Es liefert das Makro \ifPDFTeX. Die Abfragen können entfernt werden, wenn nur eine bestimmte Variante verwendet wird.
+
+\ifPDFTeX%falls mit pdfLaTeX kompiliert wird
+	%Eingabekodierung (nur notwendig bie pdflatex)
+	\usepackage[utf8]{inputenc}
+	%Für die Hausschriftart der Universität Regensburg, falls installiert:
+	%weitere Informationen unter: http://www.physik.uni-regensburg.de/studium/edverg/latex/files/cd/cd.phtml
+	\usepackage[T1]{fontenc}
+	\usepackage{frutigernext}
+\else%falls mit Lua- oder XeLaTeX kompiliert wird
+	%Für die Hausschriftart der Universität Regensburg (zusätzliche Installation notwendig)
+	%weitere Informationen unter: http://www.physik.uni-regensburg.de/studium/edverg/latex/files/cd/cd.phtml
+	\usepackage{fontspec}
+	\setmainfont{Frutiger Next LT W1G}
+\fi
+
+%Serifenschrift als Standard setzen
+\renewcommand*{\familydefault}{\sfdefault}
+
+%Sprachanpassungen -- ngerman als Sprachoption wurde als Dokumentenklasse gesetzt
+\usepackage{babel}
+
+
+
+%-------------------------------------------------------------------------------------------------------------
+%Definitionen für den Inhalt des Dokumentes. Im Allgemeinen nicht notwendig!
+\usepackage{array}
+\usepackage{colortbl}
+\newcommand*\pck[1]{\texttt{#1}}
+\newcommand*\code[1]{\texttt{#1}}
+\newcommand*\repl[1]{\textnormal{\textit{#1}}}
+\newcommand*\cmd[1]{\par\vspace{-\parskip}\medskip\noindent\fbox{\ttfamily#1}\par\vspace{-\parskip}\medskip}
+\newcommand*\heading[1]{\par\bigskip\emph{#1}\par\nobreak}
+\setkomafont{descriptionlabel}{\ttfamily\bfseries}
+\newcounter{iterator}
+%-------------------------------------------------------------------------------------------------------------
+
+%Laden der Adressdaten aus der entsprechenden .lco-Datei (Siehe KOMA-Script-Anleitung)
+\LoadLetterOption{URadressdaten-DEMO}
+\begin{document}
+	
+% Datenübergabe für Betreff und Geschäftszeile
+\setkomavar{subject}{\LaTeX-Briefvorlage im Corporate Design der Universität Regensburg}
+\setkomavar{yourref}{Ihr Zeichen}
+\setkomavar{yourmail}{08.08.2012}
+\setkomavar{myref}{Unser Zeichen}
+
+% Die letter-Umgebung wird Analog zu scrlttr2 verwendet
+\begin{letter}{Professor Dr. Max Mustermann\\Musterstraße 1\\12345 Musterstadt}
+
+
+
+\opening{Sehr geehrter Interessent,}
+
+die Klasse \pck{URletter} liefert eine Möglichkeit auf Basis von \pck{scrlttr2} Briefe nach den Vorgaben des Corporate Design der Universität Regensburg zu erstellen. Die Nutzung der Klasse lässt sich am einfachsten mit der entsprechen Demodateien (\code{URletter-DEMO.tex} und \code{URadressdaten"=DEMO.lco}) nachvollziehen.
+
+Für eine effizientere Nutzung wurden die Adressdaten in eine .lco-Datei (DEMO-Adressdaten.lco) ausgelagert. Dies ist insbesondere dann von Vorteil wenn man mit unterschiedlichen Absenderadressen arbeitet, da man je Adresse eine eigene .lco-Datei erstellen und somit die Daten jederzeit wiederverwenden kann. Für genauere Informationen verweise ich auf die \KOMAScript-Anleitung.
+
+\heading{Grundsätzliche Hinweise}
+Die Klasse \pck{URletter} benötigt die Kodierung UTF-8. (Umlaute in den Bezeichnern einiger Variablen: z.\,B.: \glqq{}Fakultät für \ldots\grqq) Wenn mit pdflatex kompiliert wird, wird daher das Paket \pck{inputenc} mit der entsprechende Option geladen. Bei Xe\LaTeX{} oder Lua\LaTeX{} entfällt dieser Schritt automatisch.
+
+Die Optionen wurden für die Version 2.0 um eine Key-Value-Struktur erweitert. Somit ist es nun möglich alle Optionen auch explizit zu deaktivieren (Beispiele finden sich in der folgenden Auflistung der einzelnen Optionen)
+
+
+\heading{Auflistung der möglichen Optionen}
+\begin{description}
+	\item[deanery/dean=true/false] Modus für Dekanate/Dekane.
+	\item[headline=true/false/intern] Option \code{headline=false} blendet die farbige Kopfzeile samt Logo, für den Druck auf vorgedrucktes Briefpapier aus. Alternative Werte für die Option \code{headline} sind \code{true} (Standardeinstellung mit Farbe) und \code{intern} (Tonersparende Variante für internen Versand). Der Interne Modus wird auch im Entwurfsmodus verwendet. (\code{draft=true}).
+	\item[refline=false/nodate] Die Option \texttt{refline} arbeitet ähnlich zur gleichnamigen \pck{scrlttr2}"=Option. Die hier nicht erwähnten Werte, werden lediglich an \pck{scrlttr2} weitergegeben. Neben den dort zur Verfügung gestellten Werten deren Bedeutung sich nicht ändert,  existiert in \pck{URletter} noch die Möglichkeit die Geschäftszeile mit \code{refline=false} komplett auszuschalten. Die Ausgabe der entsprechenden Felder wird in diesem Fall unabhängig vom Inhalt unterdrückt.
+	
+	Die Anforderungen der Gestaltungsrichtlinien (Datum wird mit in die Absenderergänzung gesetzt, falls keine Geschäftszeile gesetzt wird) bleiben erfüllt. Bei \code{refline=nodate} wird das Datum ebenfalls in die Absenderergänzung gesetzt und der Optionswert an \pck{scrlttr2} weitergereicht.
+	\item[Farboptionen] Die Farboptionen wurden analog zu den anderen Elementen des urcls-Bundles mithilfe von \pck{URrules} implementiert und werden in der Anlage am Ende des Dokumentes genauer erläutert.
+	\item[\sffamily\itshape\mdseries Optionen aus älteren Versionen] Alte Optionen, die in dieser Version nicht explizit genannt wurden funktionieren aus Kompatibilitätsgründen weiterhin.
+\end{description}
+
+\heading{Spezielle Optionen zur Optionsweitergabe an automatisch geladene Pakete}
+
+Bei einigen Paketen ist es möglich Optionen nach dem Laden zu ändern. Für die meisten Pakete existiert jedoch kein solcher Mechanismus. Um es dennoch zu ermöglichen automatisch gesetzte Optionen zu überschreiben, liefert das urcls-Bundle einen besonderen Optionstyp. Dieser ermöglicht es mithilfe der Syntax
+\cmd{\repl{Paketname}=\{\repl{Option1},\repl{Option2}\}}
+die Optionen an das entsprechende Paket zu überreichen, bevor es geladen wird.
+
+\pck{URletter} verfügt über eine solche Optionsübergabeoption die Pakete \pck{URrules} und \pck{URcolors}.
+
+Außerdem werden alle Klassenoptionen, die nicht explizit von \pck{URletter} deklariert wurden an die Basisklasse \pck{scrlttr2} weitergegeben.
+
+
+
+\closing{Happy \TeX{}ing}
+\encl{Liste der Optionen für die Farbauswahl}
+
+
+\end{letter}
+
+
+%Anlagen:
+\pagestyle{empty}
+\textbf{\LARGE Liste der Optionen für die Farbauswahl}
+
+\vspace{\baselineskip}
+Die Farben für den Farbbalken im Briefkopf werden entweder durch Angabe der zugehörigen Dokumentenklassenoption oder mithilfe des Schlüssels \code{colors=\{\repl{Werteliste (Komma getrennt)}\}}\footnote{Bei Angabe von nur einer Farboption kann die Gruppierung entfallen.} ausgewählt.
+
+Die Werte werden an \pck{URrules} weitergereicht, wobei das Paket nur geladen wird, falls die Ausgabe der Kopfzeile nicht deaktiviert wurde (\code{headline=true} oder \code{headline=intern}).
+
+Folgende Möglichkeiten existieren:
+
+\par\textbf{Fakultäten:}\par\noindent
+\setcounter{iterator}{3}
+\begin{tabular}{>{\stepcounter{iterator}\cellcolor{UR@color@\theiterator}}p{7.5mm}p{\dimexpr\linewidth-7.5mm-3\tabcolsep\relax}@{}}
+	rw&Fakultät für Rechtswissenschaft\\
+	ww&Fakultät für Wirtschaftswissenschaften\\
+	kt&Fakultät für katholische Theologie\\
+	pkgg&Fakultät für Philosophie, Kunst-, Geschichts- und Gesellschaftswissenschaften\\
+	pps&Fakultät für Psychologie, Pädagogik und Sportwissenschaft\\
+	slk&Fakultät für Sprach-, Literatur- und Kulturwissenschaften\\
+	bvm&Fakultät für Biologie und vorklinische Medizin\\
+	mat&Fakultät für Mathematik\\
+	ph&Fakultät für Physik\\
+	chp&Fakultät für Chemie und Pharmazie\\
+	med&Fakultät für Medizin
+\end{tabular}
+
+
+\par\textbf{Zentrale Einrichtungen:}\par\noindent
+\setcounter{iterator}{0}
+\begin{tabular}{>{\stepcounter{iterator}\strut\color{white}\cellcolor{UR@color@\theiterator}}p{7.5mm}p{\dimexpr\linewidth-7.5mm-2\tabcolsep\relax}@{}}
+	lov&Leitung, Organe, Verwaltung\\
+	ffg&Chancengleicheit und Familie\\
+	asz&Service-Einrichtungen für Studierende\\
+	\noalign{\setcounter{iterator}{14}}
+	ub&Universitätsbibliothek\\
+	zsk&Zentrum für Sprache und Kommunikation\\
+	eur&Europaeum (Ost-West-Zentrum)\\
+	zhw&Zentrum für Hochschul- und Wissenschaftsdidaktik\\
+	rul&Regensburg Universitätszentrum für Lehrerbildung\\
+	zfw&Zentrum für Weiterbildung\\
+	spo&Sportzentrum \\
+	rz&Rechenzentrum\\
+\end{tabular}
+
+\noindent\textbf{Vorgefertige Farbkombinationen und Spezialfarben:}\par\noindent
+\begin{tabular}{@{}p{1.5cm}p{\dimexpr.5\linewidth-1.5cm-4\tabcolsep\relax}p{.5\linewidth}}
+	all&alle Einrichtungen&\URrule{lov,ffg,asz,rw,ww,kt,pkgg,pps,slk,bvm,mat,ph,chp,med,ub,zsk,eur,zhw,rul,zfw,spo,rz}{\linewidth}{5mm}\\
+	faculties&alle Fakultäten&\URrule{rw,ww,kt,pkgg,pps,slk,bvm,mat,ph,chp,med}{\linewidth}{5mm}\\
+	fsimphy&Fachschaft Mathe-Physik&\URrule{fsimphy}{\linewidth}{5mm}\\
+\end{tabular}
+
+\end{document}
+

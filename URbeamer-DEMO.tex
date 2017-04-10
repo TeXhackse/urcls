@@ -1,0 +1,231 @@
+%% 
+%%  This is file `URbeamer-DEMO.tex' version 2.0 (2017/04/05),
+%%	it is part of
+%%  urcls -- Corporate Design for the University of Regensburg
+%% ----------------------------------------------------------------------------
+%%
+%%  Copyright (C) 2016--2017 by Marei Peischl <TeX@mareipeischl.de>
+%%
+%% ----------------------------------------------------------------------------
+%%  License information
+%% ----------------------------------------------------------------------------
+%%
+%% This work may be distributed and/or modified under the
+%% conditions of the LaTeX Project Public License, either version 1.3
+%% of this license or (at your option) any later version.
+%% The latest version of this license is in
+%%   http://www.latex-project.org/lppl.txt
+%% and version 1.3 or later is part of all distributions of LaTeX
+%% version 2005/12/01 or later.
+%%
+%% This work has the LPPL maintenance status `maintained'.
+%%
+%% The Current Maintainer of this work is Marei Peischl.
+%%
+%% ============================================================================
+%%
+%%  Dieses Werk darf nach den Bedingungen der LaTeX Project Public Lizenz
+%%  in der Version 1.3c, verteilt und/oder verändert werden. Die aktuelle
+%%  Version dieser Lizenz ist http://www.latex-project.org/lppl.txt und
+%%  Version 1.3c oder neuer ist Teil aller LaTeX-Distributionen ab 2005/12/01. 
+%%  Dieses Werk hat den LPPL-Verwaltungs-Status "maintained". 
+%%  Die Verwaltung liegt aktuell bei der Autorin, Marei Peischl.
+%%
+%% ----------------------------------------------------------------------------
+%%  End of license information
+%% ----------------------------------------------------------------------------
+%%
+%%Diese Datei dient als Demonstration zu Umsetzung der Gestaltungsrichtlinien zum Corporate Design der Universität Regensburg in LaTeX.
+%%Die Dateien werden in ihrer aktuellen Form bereitgestellt, allerdings übernimmt die Autorin keinerlei Verantwortung für die Verwendung.
+%%Bei Fragen, Wünschen oder Anregungen freue ich mich über eine Email: TeX@mareipeischl.de
+%%Selbiges gilt, wenn Sie daran interessiert sind, die Weiterentwicklung sowie die Verbesserung der Dokumentation zu unterstützen.
+%%
+\documentclass[ngerman,%Dokumentensprache
+	aspectratio=169,%Seitenverhältnis von 16:9
+	colors={rz,faculties},%Farbbalken 
+	framenumber=true,%Foliennummer in der Kopfzeile
+	externalize=true,
+	]{URbeamer}
+	
+
+
+\usepackage{iftex}%automatische Auswahl des richtigen Fontloaders und der Eingabekodierung
+%Es liefert das Makro \ifPDFTeX. Die Abfragen können entfernt werden, wenn nur eine bestimmte Variante verwendet wird.
+
+\ifPDFTeX%falls mit pdfLaTeX kompiliert wird
+	%Eingabekodierung (nur notwendig bie pdflatex)
+	\usepackage[utf8]{inputenc}
+	%Für die Hausschriftart der Universität Regensburg, falls installiert:
+	%weitere Informationen unter: http://www.physik.uni-regensburg.de/studium/edverg/latex/files/cd/cd.phtml
+	\usepackage[T1]{fontenc}
+	\usepackage{frutigernext}
+\else%falls mit Lua oder XeLaTeX kompiliert wird
+	%Für die Hausschriftart der Universität Regensburg (zusätzliche Installation notwendig)
+	%weitere Informationen unter: http://www.physik.uni-regensburg.de/studium/edverg/latex/files/cd/cd.phtml
+	\usepackage{fontspec}
+	\setmainfont{Frutiger Next LT W1G}
+\fi
+
+\usepackage{babel}
+
+
+%-------------------------------------------------------------------------------------------------------------
+%Einstellungen für den Inhalt des Dokumentes. Im Allgemeinen nicht notwendig!                        
+\usepackage{hologo}           
+\newcounter{iterator}  
+\newcommand*\code[1]{\texttt{#1}}
+%-------------------------------------------------------------------------------------------------------------       
+                            
+                            
+%Datenübergabe für die Titelfolie
+%Die Makros \and und \inst können wie gewohnt verwendet werden
+\title{\LaTeX-beamer}
+\subtitle{Im Corporate Design\\\hspace*{\fill} der Universität Regensburg}
+\department{\LaTeX-Kurse und  Support}
+%\institute[]{Institut für Experimentelle und Angewandte Physik}
+\date{3. April 2017}
+%\chair[LS für \ldots]{Lehrstuhl für \ldots}
+\author[Marei Peischl]{Marei Peischl\URbeamerIgnoreMeta{ (\url{TeX@mareipeischl.de})}}%Die Kurzversion wird in der Kopfzeile eingetragen
+                       
+                     
+                        
+\begin{document}
+	
+\frame[plain]{\titlepage}
+
+\begin{frame}{Hausschriftart: Frutiger Next LT W1G}
+	Das Rechenzentrum stellt für die Installation der Hausschriftart auf Dienstrechnern einen \href{http://www.uni-regensburg.de/rechenzentrum/software/softwarekatalog/produktdetails/index.html?product_hash=cc47a29792efce83538cdf5660de6f5d}{Installer} im Softwarekatalog an. 
+
+	\medskip
+	Der Installer enthält nur die OpenType-Variante. Daher ist es für die Benutzung notwendig mit \hologo{XeLaTeX} oder \hologo{LuaLaTeX} zu kompilieren. Darüber hinaus ist der \LaTeX-Compiler frei wählbar (vgl. auch Präambel des Quellcodes zu diesem Dokument).
+\end{frame}
+
+\begin{frame}{Titel \& Autorendaten}
+	Die Daten für die Titelseite und die Kopfzeile werden mithilfe der üblichen Makros übergeben (\code{\textbackslash{}title}, \code{\textbackslash{}author}, \code{\textbackslash{}date}, \code{\textbackslash{}institute}).
+	
+	\smallskip
+	Zusätzlich liefert URbeamer noch weiter Möglichkeiten zur Angabe einer Fakultät/Einrichtung (\code{\textbackslash{}department}) oder eines Lehrstuhles (\code{\textbackslash{}chair}). Diese Unterscheidung ist aufgrund der Gestaltungsrichtlinien notwendig.
+
+	\smallskip	
+	Alle diese Makros erlauben es, wie gewohnt, eine Kurzversion als optionales Argument zu übergeben.
+	
+	\medskip
+	\small
+	\emph{Bemerkung:} Wenn das Feld \code{\textbackslash{}department} leer ist, wird es mit dem Feld \code{\textbackslash{}institute} vertauscht. Dies dient dazu, dass alte Dateien nach wie vor das gleiche Ergebnis in der Ausgabe erzielen.
+	
+	\smallskip
+	\normalsize
+	Die Metadaten werden automatisch durch die Titeldaten erzeugt. Zusätzliche Angaben, die nicht in den Metadaten erscheinen sollen, können mit \code{\textbackslash{}URbeamerIgnoreMeta\{\}} entsprechend gesetzt werden. Ein Beispiel hierfür ist die Emailadresse auf der Titelfolie dieses Dokuments.
+\end{frame}
+
+\begin{frame}{Titelseite}
+	Da die Titelseite des Layouts die gesamte Folie ausfüllt ist als Option der Folie \code{plain} zu setzen:
+	
+	\begin{block}{Erzeugung der Titelseite}
+	 \ttfamily\textbackslash{}frame[plain]\{\textbackslash{}titlepage\}
+	 \end{block}
+\end{frame}
+
+\begin{frame}{Auswahl der Fakultätsfarben}
+Die Fakultätsfarben werden durch Angabe der zugehörigen Dokumentenklassenoption ausgewählt. Die Neue Version unterstützt zudem die Angabe eine Farbliste in der Form 
+\begin{block}{\ttfamily colors=\{Fakultät1,Fakultät2,Fakultät3\}}
+z.\,B.: 
+\ttfamily colors=\{ph,slk,rz\}
+\end{block}
+Diese Variante sorgt für eine bessere Möglichkeit der Gliederung bei den Dokumentenklassenoptionen. Die Reihenfolge der Angaben ist dabei nicht relevant. Die Sortierung erfolgt automatisch nach den Richtlinien zum Corporate Design.
+
+Die Fakultäten und Einrichtungen können über die entsprechenden Kürzel übergeben werden. Eine entsprechende Legende findet sich auf den nächsten Seiten.
+\end{frame}
+
+
+\begin{frame}{Auflistung der Fakultätskürzel}
+	\setcounter{iterator}{3}
+	\begin{tabular}{>{\stepcounter{iterator}\cellcolor{UR@color@\theiterator}}p{7.5mm}p{\dimexpr\linewidth-7.5mm-3\tabcolsep\relax}@{}}
+		rw&Fakultät für Rechtswissenschaft\\
+		ww&Fakultät für Wirtschaftswissenschaften\\
+		kt&Fakultät für katholische Theologie\\
+		pkgg&Fakultät für Philosophie, Kunst-, Geschichts- und Gesellschaftswissenschaften\\
+		pps&Fakultät für Psychologie, Pädagogik und Sportwissenschaft\\
+		slk&Fakultät für Sprach-, Literatur- und Kulturwissenschaften\\
+		bvm&Fakultät für Biologie und vorklinische Medizin\\
+		mat&Fakultät für Mathematik\\
+		ph&Fakultät für Physik\\
+		chp&Fakultät für Chemie und Pharmazie\\
+		med&Fakultät für Medizin
+	\end{tabular}
+\end{frame}
+
+\begin{frame}{Liste der Kürzel für zentrale Einrichtungen}
+\setcounter{iterator}{0}
+\begin{tabular}{>{\stepcounter{iterator}\strut\color{white}\cellcolor{UR@color@\theiterator}}p{7.5mm}p{\dimexpr\linewidth-7.5mm-3\tabcolsep\relax}@{}}
+lov&Leitung, Organe, Verwaltung\\
+ffg&Chancengleicheit und Familie\\
+asz&Service-Einrichtungen für Studierende\\
+\noalign{\setcounter{iterator}{14}}
+ub&Universitätsbibliothek\\
+zsk&Zentrum für Sprache und Kommunikation\\
+eur&Europaeum (Ost-West-Zentrum)\\
+zhw&Zentrum für Hochschul- und Wissenschaftsdidaktik\\
+rul&Regensburg Universitätszentrum für Lehrerbildung\\
+zfw&Zentrum für Weiterbildung\\
+spo&Sportzentrum \\
+rz&Rechenzentrum\\
+\end{tabular}
+\end{frame}
+
+
+\begin{frame}{Weitere Farboptionen und Farbkombinationen}
+	
+\begin{tabular}{@{}p{1.5cm}p{\dimexpr.7\linewidth-1.5cm-5\tabcolsep\relax}p{.3\linewidth}}
+all&alle Einrichtungen&\URrule{lov,ffg,asz,rw,ww,kt,pkgg,pps,slk,bvm,mat,ph,chp,med,ub,zsk,eur,zhw,rul,zfw,spo,rz}{\linewidth}{5mm}\\
+faculties&alle Fakultäten&\URrule{rw,ww,kt,pkgg,pps,slk,bvm,mat,ph,chp,med}{\linewidth}{5mm}\\
+fsimphy&Fachschaft Mathe-Physik&\URrule{fsimphy}{\linewidth}{5mm}\\
+\end{tabular}
+\end{frame}
+\begin{frame}{Entwurfsmodus}
+Die \code{draft}-Option ersetzt den die farbigen Streifen durch graue Boxen, die ggf. eine Beschriftung des Templates enthalten.
+Dies beschleunigt den Kompilierungsvorgang.
+
+\bigskip
+\small
+Analog zu den anderen Optionen, kann diese Option Wahrheitswerte (\code{true}/\code{false}) verarbeiten. Wird kein Wert angegeben, so wird \code{true} als Defaultwert verwendet.
+\end{frame}
+\begin{frame}{Einmaliges Kompilieren genügt für die Farbbalken}
+Die Implementierung der farbigen Streifen wurde mithilfe des Paketes URrules verbessert und ausgelagert. Somit ist es für die Streifenpositionierung und Farbanpassung ab dieser Version nicht mehr nötig mehrfach zu Kompilieren.
+\end{frame}
+
+\begin{frame}{TikZ-externalize-Funktion}
+	Die Klassenoption externalize unterstützt die TikZ-Funktion \glqq{}externalize\grqq. Dazu muss URbeamer mit der entsprechenden Option geladen werden und anschließend die Ausgabe der pdf-Dateien mit \code{\textbackslash{}tiktexternalize} aktiviert werden. Für die Nutzung dieser Funktion muss \code{pdflatex} mit  der Option \code{-shell-escape} ausgeführt werden.
+\end{frame}
+
+\part{In dieser Version neue zusätzliche Funktionen \& Optionen}
+
+\begin{frame}{Key-Value-Struktur für die Optionsverarbeitung}
+	Die Optionsverarbeitung wurde auf eine Key-Value-Struktur umgestellt. Das bedeutet, dass sämtliche Optionen nun in der Form \textit{Schlüssel}\code{=}\textit{Wert} übergeben werden können. Wird kein Wert angegeben wird in der Regel ein Säumniswert verwendet. Die alte Variante ist somit über die Säumniswertvariante nach wie vor möglich.
+\end{frame}
+
+\begin{frame}{Erweiterung der Optionen}
+	Um eine besser Übersicht bei der Options
+\end{frame}
+
+\begin{frame}{Offizielles Layout auf Basis der PowerPoint-Vorlage}
+\small
+Das Corporate Design sieht in der PowerPoint-Vorlage vor, dass die Einrichtung in Versalien gesetzt wird.(\code{depcaps=true})
+
+\smallskip
+Zudem wird dort das Logo mit Textmarke verwendet. (\code{logotext=true})
+
+\smallskip
+Die Größe des linken Seitenrandes ist in der PowerPoint-Vorlage bündig mit dem grauen Balken der Kopfzeile. (\code{alignwithbar=true})
+
+\medskip
+Um eine flexiblere Anpassung zu gewährleisten wurden die Standardeinstellungen für diese Dokumentenklasse entgegen dieser Vorgaben gewählt.
+(Beispiel: Im Seitenformat 16:9 ist die Textmarke des Logos nach den Vorgaben deutlich zu klein)
+
+\smallskip
+Möchte man dennoch die offiziellen Vorgaben benutzen, existiert die Option \code{cdlayout=\textit{Wahrheitswert}}.
+\end{frame}
+
+
+
+\end{document} 

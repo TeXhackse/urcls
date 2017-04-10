@@ -1,230 +1,483 @@
-% Copyright 2015 by Marei Peischl
-%
-% This file may be distributed and/or modified
-% under the LaTeX Project Public License
-%
+%% 
+%%  This is file `beamerouterthemeUR.sty' version 2.0 (2017/04/05),
+%%	it is part of
+%%  urcls -- Corporate Design for the University of Regensburg
+%% ----------------------------------------------------------------------------
+%%
+%%  Copyright (C) 2014--2017 by Marei Peischl <TeX@mareipeischl.de>
+%%
+%% ----------------------------------------------------------------------------
+%%  License information
+%% ----------------------------------------------------------------------------
+%%
+%% This work may be distributed and/or modified under the
+%% conditions of the LaTeX Project Public License, either version 1.3
+%% of this license or (at your option) any later version.
+%% The latest version of this license is in
+%%   http://www.latex-project.org/lppl.txt
+%% and version 1.3 or later is part of all distributions of LaTeX
+%% version 2005/12/01 or later.
+%%
+%% This work has the LPPL maintenance status `maintained'.
+%%
+%% The Current Maintainer of this work is Marei Peischl.
+%%
+%% ============================================================================
+%%
+%%  Dieses Werk darf nach den Bedingungen der LaTeX Project Public Lizenz
+%%  in der Version 1.3c, verteilt und/oder verändert werden. Die aktuelle
+%%  Version dieser Lizenz ist http://www.latex-project.org/lppl.txt und
+%%  Version 1.3c oder neuer ist Teil aller LaTeX-Distributionen ab 2005/12/01. 
+%%  Dieses Werk hat den LPPL-Verwaltungs-Status "maintained". 
+%%  Die Verwaltung liegt aktuell bei der Autorin, Marei Peischl.
+%%
+%% ----------------------------------------------------------------------------
+%%  End of license information
+%% ----------------------------------------------------------------------------
+%%
 
-\def\fileversion{1.4}
-\def\filedate{2015/06/15}
-\ProvidesPackage{beamerouterthemeUR}[\filedate\space\fileversion\space
-beamer-outertheme im Corporate Design der Universität Regensburg]
+\NeedsTeXFormat{LaTeX2e}
+\def\fileversion{2.0}
+\def\filedate{2017/04/05}
 
-%Booleans
-%22 Booleans zum aktivieren/deaktivieren der einzelnen Abteilungsfarben
-\newcounter{UR@runner}
-\RequirePackage{ifthen}
-%Create Booleans UR@Dep@\the\value{UR@runner}
-\def\newdep#1{\expandafter\@ifdefinable\csname ifUR@dep@#1\endcsname{%
-		\expandafter\newif\csname ifUR@dep@#1\endcsname}}
-\whiledo{\value{UR@runner}<23}{\stepcounter{UR@runner}\newdep{\the\value{UR@runner}}}
-\newboolean{UR@coloredboxes}
-%\newboolean{UR@draft}
-\newboolean{fsimphy}
-\newboolean{UR@externalize}
+\RequirePackage{expl3}
+\ProvidesExplPackage{beamerouterthemeUR}{\filedate}{\fileversion}{beameroutertheme for the University of Regensburg}
 
-%Counter-Definitionen
-\newcounter{UR@dep}
-\newcounter{UR@temp} %temporärer counter zum Abtasten
-\newcounter{UR@color}
-%Optionen zum aktivieren einzelner Farben
-\DeclareOption{lov}{\setboolean{UR@dep@1}{true}\stepcounter{UR@dep}}
-\DeclareOption{ffg}{\setboolean{UR@dep@2}{true}\stepcounter{UR@dep}}
-\DeclareOption{asz}{\setboolean{UR@dep@3}{true}\stepcounter{UR@dep}}
-\DeclareOption{rw}{\setboolean{UR@dep@4}{true}\stepcounter{UR@dep}}
-\DeclareOption{ww}{\setboolean{UR@dep@5}{true}\stepcounter{UR@dep}}
-\DeclareOption{kt}{\setboolean{UR@dep@6}{true}\stepcounter{UR@dep}}
-\DeclareOption{pkgg}{\setboolean{UR@dep@7}{true}\stepcounter{UR@dep}}
-\DeclareOption{pps}{\setboolean{UR@dep@8}{true}\stepcounter{UR@dep}}
-\DeclareOption{slk}{\setboolean{UR@dep@9}{true}\stepcounter{UR@dep}}
-\DeclareOption{bvm}{\setboolean{UR@dep@10}{true}\stepcounter{UR@dep}}
-\DeclareOption{mat}{\setboolean{UR@dep@11}{true}\stepcounter{UR@dep}}
-\DeclareOption{ph}{\setboolean{UR@dep@12}{true}\stepcounter{UR@dep}}
-\DeclareOption{chp}{\setboolean{UR@dep@13}{true}\stepcounter{UR@dep}}
-\DeclareOption{med}{\setboolean{UR@dep@14}{true}\stepcounter{UR@dep}}
-\DeclareOption{ub}{\setboolean{UR@dep@15}{true}\stepcounter{UR@dep}}
-\DeclareOption{zsk}{\setboolean{UR@dep@16}{true}\stepcounter{UR@dep}}
-\DeclareOption{eur}{\setboolean{UR@dep@17}{true}\stepcounter{UR@dep}}
-\DeclareOption{zhw}{\setboolean{UR@dep@18}{true}\stepcounter{UR@dep}}
-\DeclareOption{rul}{\setboolean{UR@dep@19}{true}\stepcounter{UR@dep}}
-\DeclareOption{zfw}{\setboolean{UR@dep@20}{true}\stepcounter{UR@dep}}
-\DeclareOption{spo}{\setboolean{UR@dep@21}{true}\stepcounter{UR@dep}}
-\DeclareOption{rz}{\setboolean{UR@dep@22}{true}\stepcounter{UR@dep}}
-\DeclareOption{fsimphy}{\setboolean{UR@dep@23}{true}\stepcounter{UR@dep}\setboolean{fsimphy}{true}}
-\DeclareOption{externalize}{\setboolean{UR@externalize}{true}}
-\DeclareOption{coloredboxes}{\setboolean{UR@coloredboxes}{true}}
-\DeclareOption{all}{\setcounter{UR@temp}{1}\whiledo{\value{UR@temp}<23}{\setboolean{UR@dep@\arabic{UR@temp}}{true}\stepcounter{UR@dep}\stepcounter{UR@temp}}}
-\DeclareOption{faculties}{\setcounter{UR@temp}{4}\whiledo{\value{UR@temp}<15}{\setboolean{UR@dep@\arabic{UR@temp}}{true}\stepcounter{UR@dep}\stepcounter{UR@temp}}}
-\ProcessOptions\relax
-%Notwendige Pakete
-\RequirePackage{calc}
-\RequirePackage{tikz,pgf}
-\usetikzlibrary{calc}
-\RequirePackage[RGB]{URcolors}
+\RequirePackage{URoptions}
 
+\Define@specialopt@Module
 
-\setcounter{UR@temp}{1}
-\setcounter{UR@color}{0}
-\ifthenelse{\boolean{UR@coloredboxes}}{
-	\ifnum\value{UR@dep}=1
-	\else
-	\ClassError{urbeamer}{You selected more than one department}{coloredboxes are not available if more than one color has been choosen}
-	\fi}{}
+\clist_map_inline:nn {logotext,alignwithbar,framenumber,externalize,coloredboxes,depcaps} {\UR_new@BoolOpt {#1}}
 
-\ifnum\value{UR@dep}=1
-\whiledo{\value{UR@temp}<23}{
-	\ifthenelse{\boolean{UR@dep@\value{UR@temp}}}{\colorlet{UR@color@basic}{UR@color@\arabic{UR@temp}}
+\UR@define@draftfinalkeys
+
+\bool_new:N \g_UR@ShowHeadline_bool
+\bool_new:N \g_UR@ShowHeadauthor_bool
+
+\UR@create@ChoiceKey{headline}[true]{
+	{true}{
+		\bool_gset_true:N \g_UR@ShowHeadline_bool
+		\bool_gset_true:N \g_UR@ShowHeadauthor_bool
+		\def\UR@headline@setting{true/author}
+	},
+	{false}{
+		\bool_gset_false:N \g_UR@ShowHeadline_bool
+		\bool_gset_false:N \g_UR@ShowHeadauthor_bool
+		\def\UR@headline@setting{false/empty}	
+	},
+	{plain}{
+		\bool_gset_true:N \g_UR@ShowHeadline_bool
+		\bool_gset_false:N \g_UR@ShowHeadauthor_bool
+		\def\UR@headline@setting{plain/noauthor}
+	},
+	{default}{
+		\bool_gset_true:N \g_UR@ShowHeadline_bool
+		\bool_gset_true:N \g_UR@ShowHeadauthor_bool
+		\def\UR@headline@setting{default (true)}
 	}
-	{}
-	\stepcounter{UR@temp}
-}\setcounter{UR@temp}{1}
-\hypersetup{allcolors=UR@color@basic}
-\else
-\definecolor{UR@color@basic}{RGB}{142,142,141}
-\fi
+}<default>
 
-\ifnum\value{UR@dep}=1
-\whiledo{\value{UR@temp}<24}{
-	\ifthenelse{\boolean{UR@dep@\value{UR@temp}}}{\colorlet{UR@color@alert}{-UR@color@\arabic{UR@temp}}\colorlet{UR@color@example}{UR@color@\arabic{UR@temp}}}
-	{}
-	\stepcounter{UR@temp}
+\UR_Define@Key:n {
+	headline / noauthor .meta:n = {headline=plain},
+	headline / empty .meta:n = {headline=false},
+	headline / author .meta:n = {headline=true}
 }
-\setcounter{UR@temp}{1}
-\else
-\colorlet{UR@color@alert}{red}
-\colorlet{UR@color@example}{green}
-\fi
 
-\mode<presentation>
-%Notwendige Definitionen
-\newlength{\x}%halber Radius der Kugel
-\setlength{\x}{0.43cm}
-\setlength{\unitlength}{\x}
-%%    Breite der Farbstreifen festlegen
-\newlength{\streifen}	
-\setlength{\streifen}{\paperwidth-10\x}
-%    \ifthenelse{\boolean{fsimphy}}{
-%    \pgfdeclareimage[width=12\x]{titlepagelogo}{FSIlogotext}
-%    }{
-%    \pgfdeclareimage[width=12\x]{titlepagelogo}{urlogotext}} % placed on the title page
-\newlength{\y} %halber radius kleine kugel in kopfzeile
-\setlength{\y}{0.5\x}
-%  	\ifthenelse{\boolean{fsimphy}}{\pgfdeclareimage[height=4\y]{headlinelogo}{FSIlogo}}{
-%  	\pgfdeclareimage[height=4\y]{headlinelogo}{urlogo.pdf}}
-\newlength{\hstreifen}
-\setlength{\hstreifen}{0.5\paperwidth}
-\addtolength{\hstreifen}{-3.75\y}
-\pgfdeclareimage[height=4\y]{headlinelogo}{urlogo}
-\pgfdeclareimage[width=12\x]{titlepagelogo}{urlogotext}
-%\logo{\pgfuseimage{headlinelogo}}
-\titlegraphic{\pgfuseimage{titlepagelogo}}
+\UR_Define@Key:n {
+	cdlayout .meta:n = {depcaps=#1,logotext=#1,alignwithbar=#1},
+	cdlayout .default:n = true
+}
 
-\newcommand{\tikzmark}[1]{\tikz[overlay,remember picture] \node (#1) {};}
+\exp_args:Nx \ProcessKeysOptions { \@currname.\@currext }
 
-%   	
-%Option für tikzexternalize 
-\ifthenelse{\boolean{UR@externalize}}{\usetikzlibrary{external}}{\newcommand\tikzexternalenable\relax\newcommand\tikzexternaldisable\relax} 
 
-%
-%Headline & Footline
+\PassOptionsToPackage{RGB}{URcolors}
+\RequirePackage{URrules}
 
-\defbeamertemplate*{headline}{URtheme}{\tikzexternaldisable%
-	\vspace*{-1mm}
-	\begin{tikzpicture}[remember picture,line width=0pt]
-	\node at (0,0) {};
-	\node[anchor=north west] at (0.5\y,-0.5\y) {\pgfuseimage{headlinelogo}};
-	\coordinate (NWHB) at ($(0.5\y,0)+7*(\y,0)$);
-	\coordinate (SMHB) at ($0.5*(\paperwidth,-5\y)+3.5*(\y,0)$);
-	\coordinate (NEHB) at (\paperwidth,0);
-	\node[anchor=north west] at ($(SMHB)$){\hspace*{-.5\fboxsep}\parbox{0.4\paperwidth}{
-			{\fontsize{6}{6.6}\selectfont\bfseries\insertshortauthor}\vspace*{1pt}
-			
-			{\fontsize{6}{6.6}\selectfont\insertshortinstitute}
-		}};
-		\end{tikzpicture}
-		\ifthenelse{\boolean{UR@draft}}{
-			\begin{tikzpicture}[overlay,remember picture,line width=0pt]
-			\draw (NWHB)rectangle(SMHB)rectangle(NEHB);
-			\end{tikzpicture}
-		}{
-		\begin{tikzpicture}[overlay,remember picture,line width=0pt]
-		\filldraw[UR@reingrau] (NWHB)rectangle(SMHB);
-		\end{tikzpicture}
-		\ifthenelse{\boolean{UR@draft}}{}{
-			\setcounter{UR@temp}{1}
-			\setcounter{UR@color}{0}
-			\whiledo{\value{UR@temp}<24}{
-				\ifthenelse{\boolean{UR@dep@\value{UR@temp}}}{
-					\begin{tikzpicture}[overlay,remember picture,line width=0pt]
-					\filldraw[UR@color@\arabic{UR@temp}]($(SMHB)+\arabic{UR@color}*(\hstreifen/\arabic{UR@dep},0)$)rectangle ($(SMHB)+\arabic{UR@color}*(\hstreifen/\arabic{UR@dep},0)+(0,5\y)+(\streifen/\arabic{UR@dep},0)$);
-					\end{tikzpicture}
-					\stepcounter{UR@color}}
-				{}
-				\stepcounter{UR@temp}
-			}
-		}}\tikzexternalenable} 
-	
-\setbeamertemplate*{footline}{}
-% Sidebar
+% New Variables
+%Headlineboxes
+\box_new:N \g_UR@headline@author_box
+\box_new:N \g_UR@headline_box
+\dim_new:N \l_UR@halfradius_dim
 
-\setbeamertemplate*{sidebar left}{}
-\setbeamertemplate*{sidebar right}{}
-\setbeamertemplate*{sidebar canvas left}{}
-\setbeamertemplate*{sidebar canvas right}{}
 
-% Frame title
-\defbeamertemplate*{frametitle}{UR}{\parbox{\textwidth}{\usebeamerfont*{frametitle}\usebeamercolor[fg]{frametitle}\insertframetitle}\hfill}
+%Additional Title Definitions
 
-%Title Page
-\defbeamertemplate*{title page}{URtheme}{
-	\tikzexternaldisable%
-	\begin{tikzpicture}[shift={(-1,3.7)},remember picture,overlay]  %($(a) + 1/3*(1cm,0)$)
-	\coordinate (NWC) at (0,0); % North West Corner of the slide
-	\coordinate (NEC) at (\paperwidth,0); %North East Corner of the slide
-	\coordinate (LC) at (0,-\paperheight); %lower left corner of the slide
-	\coordinate (NWB) at ($10*(\x,0)-2/3*(0,\paperheight)$); %north west corner of the bar
-	\coordinate (NEB) at ($(\paperwidth,0)-2/3*(0,\paperheight)$);
-	\coordinate (SWB) at (10\x,-2/3\paperheight-3\x);
-	\coordinate (SEB) at ($(\paperwidth,0)-2/3*(0,\paperheight)-(0,3\x)$);
-	\coordinate (NWL) at (3\x,-2/3*\paperheight-\x);%north west corner of the logo
-	\coordinate (NWT) at ($10*(\x,0)-1/3*(0,\paperheight)$); %north west of the title box
-	\coordinate (SWA) at ($10*(\x,0)-2/3*(0,\paperheight)$); %south west of the author box
-	\fill[UR@hellgrau](NWC)rectangle(NEB);
-	\node[anchor=north west] at ($3*(\x,0)-2/3*(0,\paperheight)-(0,\x)$) {\inserttitlegraphic};
-	\end{tikzpicture}
-	\ifthenelse{\boolean{UR@draft}}{}{
-		%Taste nun alle Einrichtungen ab
-		\setcounter{UR@temp}{1}
-		\setcounter{UR@color}{0}
-		\whiledo{\value{UR@temp}<24}{
-			\ifthenelse{\boolean{UR@dep@\value{UR@temp}}}{
-				\begin{tikzpicture}[overlay,remember picture,line width=0pt]
-				\filldraw[UR@color@\arabic{UR@temp}]($(NWB)+\arabic{UR@color}*(\streifen/\arabic{UR@dep},0)$)rectangle ($(NWB)+\arabic{UR@color}*(\streifen/\arabic{UR@dep},0)-(0,3\x)+(\streifen/\arabic{UR@dep},0)$);
-				\end{tikzpicture}
-				\stepcounter{UR@color}}
-			{}
-			\stepcounter{UR@temp}
+% \author command
+\newcommand*{\URbeamerIgnoreMeta}[1]{\texorpdfstring{#1}{}}
+
+\def\author{\@dblarg\UR@beamer@author}
+\long\def\UR@beamer@author[#1]#2{%
+	\def\insertauthor{\def\inst{\beamer@insttitle}\def\and{\beamer@andtitle}#2}%
+	\def\beamer@shortauthor{#1}%
+	\ifbeamer@autopdfinfo%	
+	{
+	\let\URbeamerIgnoreMeta\use_none:n\let\inst=\@gobble\let\thanks=\@gobble\def\and{, }
+	\tl_set:Nx \l_tmpa_tl {#2}
+	\tl_if_empty:NF \l_tmpa_tl  {
+		\seq_set_split:NnV \l_tmpa_seq {\and} \l_tmpa_tl
+		\hypersetup{pdfauthor={\seq_use:Nn \l_tmpa_seq {, }}}
 		}
 	}
-	\vspace*{-1.3mm}\par
-	\begin{tikzpicture}[overlay,remember picture]
-	\node[anchor=north west] at ($(NWT)-(\fboxsep,0)$) {%
+	\fi%
+}
+
+\author{}
+%end of \author command
+
+%institude command
+\def\institute{\@dblarg\beamer@institute}
+\long\def\beamer@institute[#1]#2{%
+	\def\beamer@temp{#2}%
+	\ifx\beamer@temp\@empty
+	\def\insertinstitute{}
+	\else
+	\def\insertinstitute{\def\inst{\beamer@instinst}\def\and{\beamer@andinst}#2}%
+	\fi
+	\def\beamer@shortinstitute{#1}
+	\def\UR@beamer@insertinstitute{#2}}
+\institute{}
+%end of institute command
+
+%\department command
+\def\department{\@dblarg\UR@beamer@department}
+
+\if_bool:N \g_UR@depcaps_bool
+\RequirePackage{textcase}
+\newcommand{\UR@depcaps}[1]{\MakeTextUppercase{#1}}
+
+\long\def\UR@beamer@department[#1]#2{%
+	\def\beamer@temp{#2}
+	\ifx\beamer@temp\@empty
+	\def\insertdepartment{}
+	\else
+	\def\insertdepartment{%
+		\cs_set_protected:Npn \and {\newline}
+		\cs_set_protected:Npn \inst ####1 {
+			\beamer@instinst{####1}
+		}
+		\UR@depcaps{#2}
+	}%
+	\fi
+	\def\beamer@shortdepartment{
+		\let\inst\use_none:n
+		\def\and{\quad}
+		\UR@depcaps{#1}
+	}
+}
+
+\else:
+\long\def\UR@beamer@department[#1]#2{%
+	\def\beamer@temp{#2}%
+	\ifx\beamer@temp\@empty
+	\def\insertdepartment{}
+	\else
+	\def\insertdepartment{\def\inst{\beamer@instinst}\def\and{\qquad}#2}%
+	\fi
+	\def\beamer@shortdepartment{#1}}
+\fi:
+\department{}
+
+\newcommand\insertshortdepartment[1][]{%
+	{%
+		\let\thanks=\@gobble%
+		\beamer@setupshort{#1}%
+		\beamer@insertshort{\beamer@shortdepartment}%
+}}
+%end of \department command
+
+% \chair command
+\def\chair{\@dblarg\UR@beamer@chair}
+\long\def\UR@beamer@chair[#1]#2{%
+	\def\beamer@temp{#2}%
+	\ifx\beamer@temp\@empty
+	\def\insertchair{}
+	\else
+	\def\insertchair{#2}%
+	\fi
+	\def\beamer@shortchair{#1}}
+\chair{}
+
+\newcommand\insertshortchair[1][]{%
+	{%
+		\beamer@setupshort{#1}%
+		\beamer@insertshort{\beamer@shortchair}%
+}}
+% end of \chair command
+
+\mode<presentation>
+
+\cs_new:Nn \UR_setup@author@headline: {
+	\UR@tikzexternaldisable
+	\hbox_gset:Nn \g_UR@headline@author_box {
+		\begin{tikzpicture}
+		\UR_beamer@headline:
+		\node[anchor=north~west,inner~ysep=1.5pt, inner~xsep=0pt, outer~sep=0pt] at (grauerstreifen) {
+			\parbox[t][\dimexpr3.2\UR@beamer@halfradius-3pt\relax][t]{\dimexpr\l_UR@linelength_dim-1.5pt\relax}{
+				{\usebeamerfont{shortauthor}
+					\insertshortauthor[width=\linewidth]\par}
+				\expandafter\ifx\csname beamer@shortinstitute\endcsname\empty
+				\expandafter\ifx\csname beamer@shortchair\endcsname\empty
+				\else%
+				{\usebeamerfont{shortchair}\insertshortchair[width=\linewidth]\par}
+				\fi%
+				\else%
+				{\usebeamerfont{shortinstitute}\insertshortinstitute[width=\linewidth]\par}
+				\fi%
+				\usebeamerfont{shortdepartment}\insertshortdepartment[width=\linewidth]
+			}
+		};
+		\useasboundingbox(0,0)rectangle(\paperwidth,-6.2\UR@beamer@halfradius);
+		\end{tikzpicture}
+	}
+	\UR@tikzexternalenable
+}
+
+
+
+\setbeamertemplate{navigation symbols}{}
+
+%End of additional Title definitions and adjustments
+
+
+\int_while_do:nn {\l_UR@temp_int<\clist_count:N \g_UR@dep_clist} {
+	\int_incr:N \l_UR@temp_int
+	\bool_if:cT{g_UR@dep\int_use:N\l_UR@temp_int _bool}{\colorlet{UR@color@basic}{UR@color@\int_use:N\l_UR@temp_int}}
+}
+
+\bool_if:NTF \g_UR@coloredboxes_bool {
+	\int_compare:nTF {\g_UR@dep_int =  1} {
+	\int_zero:N \l_UR@temp_int
+	\int_while_do:nn {\l_UR@temp_int<\clist_count:N \g_UR@dep_clist} {
+		\int_incr:N \l_UR@temp_int
+		\bool_if:cT{g_UR@dep\int_use:N\l_UR@temp_int _bool}{\colorlet{UR@color@basic}{UR@color@\int_use:N\l_UR@temp_int}}
+		}
+	}{
+		\msg_new:nnn {beamerouterthemeUR}{coloredboxes_multiple}{You~ must~ not~ select~ multiple~ color~ options~ with~ coloredboxes.\\\\
+			coloredboxes~ is~ only~ available~ for~ single~ color~ setup.\\\\
+			Disabling~ coloredboxes.
+		}
+		\msg_warning:nn {beamerouterthemeUR}{coloredboxes_multiple}
+		\colorlet{UR@color@basic}{UR@reingrau}
+	}
+	}
+	{\colorlet{UR@color@basic}{UR@reingrau}}
+
+\int_compare:nTF {\g_UR@dep_int =  1} {
+\int_zero:N \l_UR@temp_int
+\int_while_do:nn {\l_UR@temp_int<\clist_count:N \g_UR@dep_clist} {
+	\int_incr:N \l_UR@temp_int
+	\bool_if:cT{g_UR@dep\int_use:N\l_UR@temp_int _bool}{
+		\colorlet{UR@color@alert}{-UR@color@\int_use:N\l_UR@temp_int}
+		\colorlet{UR@color@example}{UR@color@\int_use:N\l_UR@temp_int}
+	}
+}
+}{
+\colorlet{UR@color@alert}{red}
+\colorlet{UR@color@example}{green}
+}
+
+\dim_set:Nn \l_UR@halfradius_dim {.215cm}
+\newlength{\UR@beamer@halfradius}
+\setlength{\UR@beamer@halfradius}{\l_UR@halfradius_dim}
+
+\UR@create@colorlinebox[3\UR@beamer@halfradius]<(\paperwidth-10\UR@beamer@halfradius)/2>{UR_beamer@headbar}
+
+\cs_new:Nn \UR_beamer@headline:
+{	
+	\dim_set:Nn \l_UR@linelength_dim {(\paperwidth-10\UR@beamer@halfradius)/2}
+	\fill[UR@reingrau](10\UR@beamer@halfradius,0)rectangle++(\l_UR@linelength_dim,-3\UR@beamer@halfradius);
+	\coordinate(grauerstreifen) at (10\UR@beamer@halfradius+\l_UR@linelength_dim,-3\UR@beamer@halfradius);
+	\node[UR@logo] at (3\UR@beamer@halfradius,-\UR@beamer@halfradius) {\UR_beamer@headlinelogo:};
+	\node[anchor=south~west,inner~sep=0pt,outer~sep=0pt] at (grauerstreifen) {\box_use:N \UR_beamer@headbar};
+}
+
+%Logo Declaration
+%\if option fsimphy is active use corresponding logo instead of UR
+
+
+\bool_if:NTF \g_UR@draft_bool {
+	\cs_new:Nn \UR_beamer@headlinelogo: {\tikz\draw(0,0)rectangle(12\UR@beamer@halfradius,4\UR@beamer@halfradius);}
+	\cs_new:Nn \UR_beamer@titlelogo: {\tikz\draw(0,0)rectangle(24\UR@beamer@halfradius,8\UR@beamer@halfradius);}
+}{
+	\cs_new:Nn \UR_beamer@headlinelogo: {\pgfuseimage{UR@beamer@headlinelogo}}
+	\cs_new:Nn \UR_beamer@titlelogo: {\pgfuseimage{UR@beamer@titlepagelogo}}
+	\cs_if_exist:NTF \UR@opt@logo {
+		\exp_args:Nx \tl_if_eq:nnTF {\UR@opt@logo} {fsimphy}
+			{\pgfdeclareimage[width=24\UR@beamer@halfradius]{UR@beamer@titlepagelogo}{FSIlogotext}
+				\bool_if:NTF \g_UR@logotext_bool
+				{\pgfdeclareimage[width=12\UR@beamer@halfradius]{UR@beamer@headlinelogo}{FSIlogotext}}
+				{\pgfdeclareimage[height=4\UR@beamer@halfradius]{UR@beamer@headlinelogo}{FSIlogo}}
+			}{
+			\pgfdeclareimage[width=24\UR@beamer@halfradius]{UR@beamer@titlepagelogo}{\UR@opt@logo}
+			\pgfdeclareimage[width=12\UR@beamer@halfradius]{UR@beamer@headlinelogo}{\UR@opt@logo}
+			}
+	}{
+		\pgfdeclareimage[width=24\UR@beamer@halfradius]{UR@beamer@titlepagelogo}{urlogotext}
+		\bool_if:NTF \g_UR@logotext_bool
+			{\pgfdeclareimage[width=12\UR@beamer@halfradius]{UR@beamer@headlinelogo}{urlogotext}}
+			{\pgfdeclareimage[height=4\UR@beamer@halfradius]{UR@beamer@headlinelogo}{urlogo}}
+	}
+}
+
+
+\titlegraphic{\UR_beamer@titlelogo:}
+
+%Option für tikzexternalize
+\bool_if:NTF \g_UR@externalize_bool{
+	\ExplSyntaxOff
+    \usetikzlibrary{external}
+    \ExplSyntaxOn
+    \newcommand*\UR@tikzexternalenable{\tikzexternalenable}
+    \newcommand*\UR@tikzexternaldisable{\tikzexternaldisable}
+}{
+    \newcommand*\UR@tikzexternalenable{\relax}
+    \newcommand*\UR@tikzexternaldisable{\relax}
+}
+
+
+\hbox_gset:Nn \g_UR@headline_box {
+	\UR@tikzexternaldisable
+	\begin{tikzpicture}
+	\UR_beamer@headline:
+	\useasboundingbox(0,0)rectangle(\paperwidth,-6.2\UR@beamer@halfradius);
+	\end{tikzpicture}
+	\UR@tikzexternalenable
+}
+
+\AtBeginDocument{\UR_setup@author@headline:}
+
+\defbeamertemplate{headline}{URtheme~author}{
+	\UR@tikzexternaldisable
+	\box_use:N \g_UR@headline@author_box
+	\bool_if:NT \g_UR@framenumber_bool {
+		\par
+		\usebeamercolor[fg]{headline~framenumber}\usebeamerfont{framenumber}
+		\tikz{
+			\useasboundingbox (0,0) -- (\paperwidth,0);
+			\node[anchor=east, outer~sep=0pt,inner~ysep=0pt,inner~xsep=3pt] at 
+			(\paperwidth, \dim_eval:n {\box_ht:N\g_UR@headline@author_box +\box_dp:N\g_UR@headline@author_box - 1.5\UR@beamer@halfradius})
+			{\insertframenumber};
+		}
+	}
+	\UR@tikzexternalenable
+}
+
+\defbeamertemplate{headline}{URtheme~plain}{%
+	\UR@tikzexternaldisable
+	\box_use:N \g_UR@headline_box
+	\bool_if:NT \g_UR@framenumber_bool {
+		\par
+		\usebeamercolor[fg]{headline~framenumber}\usebeamerfont{framenumber}
+		\tikz{
+			\useasboundingbox (0,0) -- (\paperwidth,0);
+			\node[anchor=east, outer~sep=0pt,inner~ysep=0pt,inner~xsep=3pt] at 
+			(\paperwidth, \dim_eval:n {\box_ht:N\g_UR@headline_box +\box_dp:N\g_UR@headline_box - 1.5\UR@beamer@halfradius})
+			{\insertframenumber};
+		}
+	}
+}
+
+%Set default headline template
+\bool_if:NTF \g_UR@ShowHeadline_bool {
+	\bool_if:NTF \g_UR@ShowHeadauthor_bool {
+		\defbeamertemplatealias{headline}{URtheme}{URtheme~author}
+	}{
+		\defbeamertemplatealias{headline}{URtheme}{URtheme~plain}
+	}
+}{
+	\defbeamertemplatealias{headline}{URtheme}{URtheme~empty}
+}
+
+
+\setbeamertemplate{headline}[URtheme]
+
+
+% Frame title
+\defbeamertemplate*{frametitle}{URtheme}[1][left]
+{
+\nointerlineskip
+  \@tempdima=\textwidth%
+  \begin{beamercolorbox}[#1,wd=\the\@tempdima]{frametitle}
+    \usebeamerfont{frametitle}%
+    \vbox{}\vskip-1ex%
+    \if@tempswa\else\csname beamer@fte#1\endcsname\fi%
+    \strut\insertframetitle\strut\par%
+    {%
+      \ifx\insertframesubtitle\@empty%
+      \else%
+      {\usebeamerfont{framesubtitle}\usebeamercolor[fg]{framesubtitle}\insertframesubtitle\strut\par}%
+      \fi
+    }%
+    \vskip-1ex%
+    \if@tempswa\else\vskip-.3cm\fi% set inside beamercolorbox... evil here...
+  \end{beamercolorbox}%
+}
+
+\UR@create@colorlinebox[-6\UR@beamer@halfradius]<\paperwidth-20\UR@beamer@halfradius>{UR@beamer@titlecolorbox}
+
+%Title Page
+\defbeamertemplate*{title~page}{URtheme}{
+	\UR_setup@author@headline:
+	\begin{beamercolorbox}[wd=\paperwidth,ht=\paperheight]{title~page}
+	\UR@tikzexternaldisable%
+	\begin{tikzpicture}
+	\useasboundingbox (0,0) rectangle (\paperwidth,-\paperheight);
+	\coordinate (NWB) at (20\UR@beamer@halfradius,-2\paperheight/3); %north west corner of the bar
+	\coordinate (NEB) at (\paperwidth,-2\paperheight/3);%north east corner of the bar
+	\coordinate (NWL) at (6\UR@beamer@halfradius,-2\paperheight/3-2\UR@beamer@halfradius);%north west corner of the logo
+	\coordinate (NWT) at (20\UR@beamer@halfradius,-\paperheight/3); %north west of the title box
+	\coordinate (SWA) at (20\UR@beamer@halfradius,-2\paperheight/3); %south west of the author box
+	\fill[UR@hellgrau](current~bounding~box.north~ west)rectangle(NEB);
+	\node[UR@logo] at (NWL) {\inserttitlegraphic};%(6\UR@beamer@halfradius,-2\paperheight/3-\UR@beamer@halfradius)
+	\node[UR@logo] at (NWB) {\usebox{\UR@beamer@titlecolorbox}};
+		\node[anchor=south~west,inner~xsep=0pt, inner~ysep=.2em,outer~sep=0pt] (authordata) at (SWA)
+		{\begin{minipage}[b]{.65\paperwidth}
+			\usebeamerfont{author}
+			{\usebeamerfont{date}\usebeamercolor[fg]{date}\insertdate\par}%
+			{\usebeamerfont{author}\usebeamercolor[fg]{author}\insertauthor\par}%
+			\ifx\insertdepartment\empty
+				\ifx\insertchair\empty
+				\else
+					{\usebeamerfont{chair}\usebeamercolor[fg]{chair}\insertchair\par}%
+				\fi
+				\par\vspace{.2\baselineskip}
+				{\usebeamerfont{department}\usebeamercolor[fg]{department}\insertinstitute\par}%
+			\else%
+				\ifx\insertinstitute\empty
+					{\usebeamerfont{chair}\usebeamercolor[fg]{chair}\insertchair\par}%
+				\else%
+					{\usebeamerfont{institute}\usebeamercolor[fg]{institute}\insertinstitute\par}%
+				\fi%
+			\par\vspace{.2\baselineskip}
+			{\usebeamerfont{department}\usebeamercolor[fg]{department}\insertdepartment\par}
+			\fi
+		\end{minipage}
+		};
+		\node[inner~sep=0pt,outer~sep=0pt,anchor=south~west] at (authordata.north~west) {%
 		\begin{minipage}[t]{.65\paperwidth}
-		{\usebeamerfont{title}\usebeamercolor[fg]{title}\inserttitle}\vspace*{1pt}
-		
+		{\usebeamerfont{title}\usebeamercolor[fg]{title}\inserttitle}
+		\par
+		\vspace{.2\baselineskip}
 		{\usebeamerfont{subtitle}\usebeamercolor[fg]{subtitle}\insertsubtitle}
 		\end{minipage}
 	};
-	\node[anchor=south west] at ($(SWA)+(-\fboxsep,0)$)
-	{\begin{minipage}[b]{.65\paperwidth}
-		{\usebeamerfont{date}\usebeamercolor[fg]{date}\insertdate}
-		
-		{\usebeamerfont{author}\usebeamercolor[fg]{author}\insertauthor}
-		
-		{\usebeamerfont{institute}\usebeamercolor[fg]{institute}\fontsize{9}{9.6}\selectfont\bfseries\insertinstitute}
-		\end{minipage}
-	};
-	\end{tikzpicture}\tikzexternalenable
-}%
+	\end{tikzpicture}
+	\end{beamercolorbox}
+\UR@tikzexternalenable
+}
 
+\bool_if:NTF \g_UR@alignwithbar_bool
+	{\setbeamersize{text~ margin~ left=10\UR@beamer@halfradius,text~ margin~ right=3\UR@beamer@halfradius}}
+	{\setbeamersize{text~ margin~ left=3\UR@beamer@halfradius,text~ margin~ right=3\UR@beamer@halfradius}}
+	
+\def\maketitle{
+	\ifbeamer@inframe\titlepage\else\frame{\titlepage}\fi
+}
+
+
+\setbeamertemplate{navigation~symbols}{}
+
+\mode<all>
 
 \endinput

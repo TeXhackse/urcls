@@ -1,0 +1,203 @@
+%% 
+%%  This is file `URpagestyles-DEMO.tex' version 2.0 (2017/04/05),
+%%	it is part of
+%%  urcls -- Corporate Design for the University of Regensburg
+%% ----------------------------------------------------------------------------
+%%
+%%  Copyright (C) 2016--2017 by Marei Peischl <TeX@mareipeischl.de>
+%%
+%% ----------------------------------------------------------------------------
+%%  License information
+%% ----------------------------------------------------------------------------
+%%
+%% This work may be distributed and/or modified under the
+%% conditions of the LaTeX Project Public License, either version 1.3
+%% of this license or (at your option) any later version.
+%% The latest version of this license is in
+%%   http://www.latex-project.org/lppl.txt
+%% and version 1.3 or later is part of all distributions of LaTeX
+%% version 2005/12/01 or later.
+%%
+%% This work has the LPPL maintenance status `maintained'.
+%%
+%% The Current Maintainer of this work is Marei Peischl.
+%%
+%% ============================================================================
+%%
+%%  Dieses Werk darf nach den Bedingungen der LaTeX Project Public Lizenz
+%%  in der Version 1.3c, verteilt und/oder verändert werden. Die aktuelle
+%%  Version dieser Lizenz ist http://www.latex-project.org/lppl.txt und
+%%  Version 1.3c oder neuer ist Teil aller LaTeX-Distributionen ab 2005/12/01. 
+%%  Dieses Werk hat den LPPL-Verwaltungs-Status "maintained". 
+%%  Die Verwaltung liegt aktuell bei der Autorin, Marei Peischl.
+%%
+%% ----------------------------------------------------------------------------
+%%  End of license information
+%% ----------------------------------------------------------------------------
+%%
+%%Diese Datei dient als Demonstration zu Umsetzung der Gestaltungsrichtlinien zum Corporate Design der Universität Regensburg in LaTeX.
+%%Die Dateien werden in ihrer aktuellen Form bereitgestellt, allerdings übernimmt die Autorin keinerlei Verantwortung für die Verwendung.
+%%Bei Fragen, Wünschen oder Anregungen freue ich mich über eine Email: TeX@mareipeischl.de
+%%Selbiges gilt, wenn Sie daran interessiert sind, die Weiterentwicklung sowie die Verbesserung der Dokumentation zu unterstützen.
+%%
+\documentclass[ngerman,headsepline=3pt,headinclude=true]{scrartcl}
+\usepackage[utf8]{inputenc}
+\usepackage[ngerman]{babel}
+\usepackage[T1]{fontenc}
+
+\usepackage[origlayout=true,automark,colors={faculties,rz}]{URpagestyles}
+
+\usepackage{hyperref}
+\usepackage{array}
+
+
+%-------------------------------------------------------------------------------------------------------------
+%Definitionen für den Inhalt des Dokumentes. Im Allgemeinen nicht notwendig!
+\renewcommand*{\familydefault}{\sfdefault}%Serifenlose Schrift als Standardschrift
+\newcommand*{\pck}[1]{\texttt{#1}}
+\newcommand*{\code}[1]{\texttt{#1}}
+\newcommand*{\repl}[1]{\textrm{\textit{#1}}}
+\newcommand{\cmd}[1]{\par\medskip\noindent\fbox{\ttfamily#1}\par\medskip\noindent}
+\setcounter{secnumdepth}{\sectionnumdepth}
+\newsavebox{\remarkbox}
+\sbox{\remarkbox}{\emph{Anmerkung:~}}
+\newcounter{iterator}
+\usepackage{colortbl}
+%-------------------------------------------------------------------------------------------------------------
+
+\title{URpagestyles}
+\subtitle{Seitenstile in Anlehnung an das Corporate Design der Universität Regensburg}
+\date{Version 2.0 (2017/04/05)}
+\author{Marei Peischl~(\href{mailto:TeX@mareipeischl.de}{TeX@ mareipeischl.de})}
+
+\renewcommand{\titlepagestyle}{URtitle}%URtitle Seitenstil für die Titelseite verwenden
+\begin{document}
+\maketitle
+
+\begin{abstract}
+	\noindent Es ist üblich Dokumente, wie beispielsweise Abschlussarbeiten, mit dem Logo der Universität zu versehen. Dies geschieht aufgrund des Corporate Designs der Universität Regensburg öfters auch unter Nutzung der entsprechenden Fakultätsfarben und Farbbalken, wie Sie in Briefen Verwendung finden.
+	
+	Die Kopfzeile, wie Sie in Briefen verwendet wird ist jedoch sehr mächtig, sodass eine kontinuierliche Verwendung als Kopfzeile normalerweise nicht sinnvoll ist. Um dennoch das Farbschema nutzen zu können, liefert \pck{URpagestyles} Trennlinien und entsprechende Seitenstile, die das Farbschema übernehmen und stellt zudem eine Kopfzeile für Titelseiten bereit.
+\end{abstract}
+
+\section{Grundsätzliche Verwendung}
+Das Paket basiert auf \pck{scrlayer-scrpage}. Daher werden die entsprechenden Seitenstile analog zu den Stiles dieses Paketes genutzt und konfiguriert.
+
+Analog zum Stilpaar \code{scrheadings}/\code{plain.scrheadings} existiert im Paket \pck{URpagestyles} ein Paar \code{URheadings}/\code{plain.URheadings}. 
+Aktiviert wird dieses Stilpaar ebenfalls analog mit \code{\textbackslash{}pagestyle\{URheadings\}}.
+
+Die Konfiguration von Trennlinien um den Kopf-\&Fußbereich, sowie der Größen der Kopf-\&Fußzeilen funktioniert über dieselben Optionen, wie bei \pck{scrlayer-scrpage}. Eine Modifizierung der Felder der Seitenstile ist ebenfalls mithilfe derselben Möglichkeiten wie beim Basispaket möglich.
+
+Eine Änderung dieser Optionen ist über die mit \KOMAScript{} zur Verfügung gestellten Möglichkeiten möglich.
+Zusätzlich liefert \pck{URpagestyles} eine Möglichkeit Optionen auch direkt an \pck{scrlayer-scrpage} weiterzureichen, siehe 
+Abschnitt~\ref{passopts}.
+
+Zusätzlich zum Seitenstilpaar \code{URheadings} stellt  \pck{URpagestyles} noch eine Variante für die Titelseiten zur Verfügung. Diese Kopfzeile entspricht der Kopfzeile des Briefkopfes und kann über den Seitenstil \code{URtitle} angewählt werden. Eine Modifizierung dieses Seitenstils ist über die von \pck{scrlayer} zur Verfügung gestellten Möglichkeiten möglich.
+
+
+\section{Das Layout der Linien}
+Die Linien werden analog zu den Linien des Paketes \pck{scrlayer-scrpage} (aus \KOMAScript) konfiguriert.
+Die zugehörigen Optionen können entweder als Klassen- oder Paketoptionen sowie über die Makros \code{\textbackslash{}KOMAoptions} oder \code{\textbackslash{}KOMAoption} übergeben. Genauere Hinweise zur Verwendung findet man in der \KOMAScript{}-Anleitung.
+
+Zusätzlich kann \pck{URpagestyles} auch einige Optionen direkt verarbeiten. Die Werte werden an \KOMAScript{} weitergereicht und dementsprechend verarbeitet.
+
+\cmd{\begin{tabular}{@{}ll@{}}
+headtopline=\repl{Dicke}:\repl{Länge}\\
+headsepline=\repl{Dicke}:\repl{Länge}\\
+footsepline=\repl{Dicke}:\repl{Länge}\\
+footbotline=\repl{Dicke}:\repl{Länge}\\
+\end{tabular}}
+
+\noindent\usebox{\remarkbox}%
+\parbox[t]{\dimexpr\linewidth-\wd\remarkbox\relax}{%
+ Zu dünne Linien sind aufgrund der Farbgebung nicht sonderlich sinnvoll. Daher ist zu beachten, dass der von \KOMAScript{} verwendete Säumniswert für die Dicke für eine sinnvolle Ausgabe geändert werden muss. Dieses Layout verwendet beispielsweise \code{headsepline=3pt}.}
+
+\bigskip
+\noindent Zusätzlich liefert \pck{URpagestyles} die Option \code{origlayout=\repl{Wahrheitswert}}, um die Linien in Kopf und Fußzeile horizontal so auszurichten, wie es im Seitenkopf des Titelstiles der Fall ist.
+Im Fall \code{origlayout=true} werden Einstellungen zur Änderung der Linienlänge ignoriert.
+
+\bigskip
+\noindent Der jeweilige Abstand zwischen den beiden korrespondierenden Linien entspricht der Höhe von Kopf- bzw. Fußzeile. Somit ist es unbedingt notwendig, damit der Inhalt zwischen den Linien richtig positioniert wird, die Höhe über die dafür vorgesehenen \KOMAScript-Optionen einzustellen (Die Optionen heißen \code{headlines=\repl{Anzahl}} \& \code{footlines=\repl{Anzahl}}, , beziehungsweise \code{headheight=\repl{Höhe}} \& \code{footheight=\repl{Höhe}}).
+Die Voreinstellung bei Verwendung von \pck{typearea} ist \code{headlines=1.25} und \code{headlines=1.25}. Dies führt dazu, dass ohne Anpassung bei einzeiliger Kopfzeile die Linien nicht richtig ausgerichtet werden.
+
+
+\section{Weitergabe von Optionen an automatisch geladene Pakete}
+\label{passopts}
+Bei einigen Paketen ist es möglich Optionen nach dem Laden zu ändern. Für die meisten Pakete existiert jedoch kein solcher Mechanismus. Um es dennoch zu ermöglichen automatisch gesetzte Optionen zu überschreiben, liefert das urcls-Bundle einen besonderen Optionstyp. Dieser ermöglicht es mithilfe der Syntax
+\cmd{\repl{Paketname}=\{\repl{Option1},\repl{Option2}\}}
+die Optionen an das entsprechende Paket zu überreichen, bevor es geladen wird.
+
+\pck{URpagestyles} verfügt über eine solche Optionsübergabeoption für folgende Pakete:\\
+\pck{URrules}, \pck{URcolors}, \pck{scrlayer-scrpage}, \pck{scrlayer}
+
+
+\section{Der interne Modus}
+Analog zur Briefklasse \pck{URletter} exitiert auch bei \pck{URpagestyles} ein interner Modus. Der Stil der Titelseite orientiert sich am Briefkopf für die interne Verwendung.
+
+Die Trennlinien im Stil \code{URheadings} werden ebenfalls in eine schneller kompilierbare Variante umgewandelt. Der graue Teil der Linien bleibt gleich. Der Farbige Anteil wird durch einen grauen Rahmen derselben Größe ersetzt.
+
+
+\section{Farbauswahl}
+
+Die Farben für die Farbbalken werden durch Paketoptionen ausgewählt. Die Konstruktion des Farbbalkens wird, wie bei allen Klassen und Paketen des urcls-Bundles durch das Paket \pck{URrules} durchgeführt. Die Farboptionen müssen somit an \pck{URrules} übergeben werden. Hierfür stellt \pck{URpagestyles} zwei verschiedene Varianten zur Verfügung:
+
+\begin{description}
+	\item[Key-Val-Variante] Mithilfe des Schlüssels \code{colors} kann man eine Liste von Farboptionen an \pck{URrules} weiterreichen. Diese Variante ist wohl die übersichtlichste, weil sie die Farboptionen auch als solche kennzeichnet. Mehrere Farboptionen können gruppiert werden (Der Mechanismus ist derselbe, wie für die Optionsübergabe in Abschnitt~\ref{passopts}).
+	
+	Die Syntax hat folgende Form:
+	\cmd{colors=\{\repl{Farboption1}, \repl{Farboption2}, \repl{\ldots}\}}
+	\item[Direkte Übergabe] Die verschiedenen Optionen für die Farbauswahl können direkt als Paketoptionen zu \pck{URpagestyles} geladen werden. Sie werden entsprechend an \pck{URrules} weitergegeben.
+\end{description}
+
+\subsection{Liste der möglichen Optionswerte für die Farbauswahl}
+
+\vspace{\baselineskip}
+Die Farben für den Farbbalken im Briefkopf werden entweder durch Angabe der zugehörigen Dokumentenklassenoption oder mithilfe des Schlüssels \code{colors=\{\repl{Werteliste (Komma getrennt)}\}}\footnote{Bei Angabe von nur einer Farboption kann die Gruppierung entfallen.} ausgewählt.
+
+Die Werte werden an \pck{URrules} weitergereicht, wobei das Paket nur geladen wird, falls die Ausgabe der Kopfzeile nicht deaktiviert wurde (\code{headline=true} oder \code{headline=intern}).
+
+Folgende Möglichkeiten existieren:
+
+\minisec{Fakultäten:}
+\setcounter{iterator}{3}
+\begin{tabular}{>{\stepcounter{iterator}\cellcolor{UR@color@\theiterator}}p{7.5mm}p{\dimexpr\linewidth-7.5mm-3\tabcolsep\relax}@{}}
+	rw&Fakultät für Rechtswissenschaft\\
+	ww&Fakultät für Wirtschaftswissenschaften\\
+	kt&Fakultät für katholische Theologie\\
+	pkgg&Fakultät für Philosophie, Kunst-, Geschichts- und Gesellschaftswissenschaften\\
+	pps&Fakultät für Psychologie, Pädagogik und Sportwissenschaft\\
+	slk&Fakultät für Sprach-, Literatur- und Kulturwissenschaften\\
+	bvm&Fakultät für Biologie und vorklinische Medizin\\
+	mat&Fakultät für Mathematik\\
+	ph&Fakultät für Physik\\
+	chp&Fakultät für Chemie und Pharmazie\\
+	med&Fakultät für Medizin
+\end{tabular}
+
+
+\minisec{Zentrale Einrichtungen:}
+\setcounter{iterator}{0}
+\begin{tabular}{>{\stepcounter{iterator}\strut\color{white}\cellcolor{UR@color@\theiterator}}p{7.5mm}p{\dimexpr\linewidth-7.5mm-2\tabcolsep\relax}@{}}
+	lov&Leitung, Organe, Verwaltung\\
+	ffg&Chancengleicheit und Familie\\
+	asz&Service-Einrichtungen für Studierende\\
+	\noalign{\setcounter{iterator}{14}}
+	ub&Universitätsbibliothek\\
+	zsk&Zentrum für Sprache und Kommunikation\\
+	eur&Europaeum (Ost-West-Zentrum)\\
+	zhw&Zentrum für Hochschul- und Wissenschaftsdidaktik\\
+	rul&Regensburg Universitätszentrum für Lehrerbildung\\
+	zfw&Zentrum für Weiterbildung\\
+	spo&Sportzentrum \\
+	rz&Rechenzentrum\\
+\end{tabular}
+
+\minisec{Vorgefertige Farbkombinationen und Spezialfarben:}
+\begin{tabular}{@{}p{1.5cm}p{\dimexpr.5\linewidth-1.5cm-4\tabcolsep\relax}p{.5\linewidth}}
+	all&alle Einrichtungen&\URrule{lov,ffg,asz,rw,ww,kt,pkgg,pps,slk,bvm,mat,ph,chp,med,ub,zsk,eur,zhw,rul,zfw,spo,rz}{\linewidth}{5mm}\\
+	faculties&alle Fakultäten&\URrule{rw,ww,kt,pkgg,pps,slk,bvm,mat,ph,chp,med}{\linewidth}{5mm}\\
+	fsimphy&Fachschaft Mathe-Physik&\URrule{fsimphy}{\linewidth}{5mm}\\
+\end{tabular}
+
+
+\end{document}
