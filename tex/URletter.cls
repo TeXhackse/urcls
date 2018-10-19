@@ -78,6 +78,7 @@
 	headline / color .meta:n = {headline=true}
 }
 
+\bool_new:N \g_UR@locdate_bool
 
 \UR@create@ChoiceKey{refline}{
 	{nodate}{
