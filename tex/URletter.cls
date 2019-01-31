@@ -1,10 +1,10 @@
 %% 
-%%  This is file `URletter.cls' version 2.0 (2017/04/05),
+%%  This is file `URletter.cls' version 2.1 (2019/10/19),
 %%	it is part of
 %%  urcls -- Corporate Design for the University of Regensburg
 %% ----------------------------------------------------------------------------
 %%
-%%  Copyright (C) 2014--2017 by Marei Peischl <TeX@mareipeischl.de>
+%%  Copyright (C) 2014--2018 by Marei Peischl <TeX@mareipeischl.de>
 %%
 %% ----------------------------------------------------------------------------
 %%  License information
@@ -37,8 +37,8 @@
 %%
 
 \NeedsTeXFormat{LaTeX2e}
-\def\fileversion{2.0}
-\def\filedate{2017/04/05}
+\def\fileversion{2.1}
+\def\filedate{2018/10/19}
 
 \RequirePackage{expl3}
 \ProvidesExplClass {URletter} {\filedate} {\fileversion} {scrlttr2 based document class for the University of Regensburg}

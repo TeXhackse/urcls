@@ -1,9 +1,9 @@
 # urcls
 LaTeX classes & packages to use the corporate Design of the University of Regensburg using LaTeX.
 
- Copyright (C) Marei Peischl <tex@mareipeischl.de>, 2014--2017
+ Copyright (C) Marei Peischl <tex@mareipeischl.de>, 2014--2019
 
- urcls 2017/04/05 v2.0
+ urcls 2019/01/31 v2.1
 
 ***************************************************************************
 
@@ -21,7 +21,7 @@ Version 2.0 also includes the packages URrules and URpagestyles, which provide a
 
 To Compile the DEMO-files one might need the [Logos](http://www.physik.uni-regensburg.de/studium/edverg/latex/files/local/urlogo.zip) (Only available from the network of the University of Regensburg).
 
-[Link to the github repository](https://github.com/Blubu/urcls)
+[Link to the github repository](https://github.com/TeXhackse/urcls)
 
 Files
 -----
@@ -33,7 +33,9 @@ This work consists of the files
 + beamercolorthemeUR.sty v2.0(2017/04/05)
 + beamerfontthemeUR.sty v2.0(2017/04/05)
 + beamerouterthemeUR.sty v2.0(2017/04/05)
-+ URletter.cls v2.0(2017/04/05)
++ URletter.cls v2.1(2018/10/19)
++ URspecialopts v2.1 (2019/01/22)
++ URoptions v2.0 (2017/04/05)
 
 
 **urcls example files**
