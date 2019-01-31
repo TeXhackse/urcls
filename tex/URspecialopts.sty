@@ -155,7 +155,8 @@
 		\clist_if_empty:cF {l_#1@SpecialKey_clist}{
 			\Module@Options@Filter:xcc [#1]{l_#1@SpecialKey_clist}{l_#1@unprocessed_clist}
 			\clist_map_inline:cn {l_#1@SpecialKey_clist} {
-				\exp_args:Nnc \use:c {SpecialKey_#1@##1_code:c} {l_#1@##1@values_tl}
+				\tl_if_empty:cF {l_#1@##1@values_tl} 
+					{\exp_args:Nnc \use:c {SpecialKey_#1@##1_code:c} {l_#1@##1@values_tl}}
 			}
 		}
 	}
