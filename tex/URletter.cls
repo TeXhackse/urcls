@@ -1,4 +1,4 @@
-%% 
+%%
 %%  This is file `URletter.cls' version 2.1 (2019/10/19),
 %%	it is part of
 %%  urcls -- Corporate Design for the University of Regensburg
@@ -27,8 +27,8 @@
 %%  Dieses Werk darf nach den Bedingungen der LaTeX Project Public Lizenz
 %%  in der Version 1.3c, verteilt und/oder verändert werden. Die aktuelle
 %%  Version dieser Lizenz ist http://www.latex-project.org/lppl.txt und
-%%  Version 1.3c oder neuer ist Teil aller LaTeX-Distributionen ab 2005/12/01. 
-%%  Dieses Werk hat den LPPL-Verwaltungs-Status "maintained". 
+%%  Version 1.3c oder neuer ist Teil aller LaTeX-Distributionen ab 2005/12/01.
+%%  Dieses Werk hat den LPPL-Verwaltungs-Status "maintained".
 %%  Die Verwaltung liegt aktuell bei der Autorin, Marei Peischl.
 %%
 %% ----------------------------------------------------------------------------
@@ -171,24 +171,24 @@
 	\RequirePackage{URcolors}
 	\newlength{\UR@title@halfradius}
 	\setlength{\UR@title@halfradius}{\dimexpr\paperwidth/42\relax}
-	\setkomavar{firsthead}{} 
+	\setkomavar{firsthead}{}
 }
 
-\@setplength{refhpos}{\useplength{toaddrhpos}}
+\setplength{refhpos}{\useplength{toaddrhpos}}
 \setlengthtoplength{\oddsidemargin}{toaddrhpos}
 \addtolength{\oddsidemargin}{-1in}
 \setlength{\textwidth}{\paperwidth}
 \addtolengthplength[-2]{\textwidth}{toaddrhpos}
-\@setplength{refwidth}{\textwidth}
+\setplength{refwidth}{\textwidth}
 %Positionierung des Kopfes
-\@setplength{firstheadhpos}{0pt}
-\@setplength{firstheadvpos}{0pt} %-1pt}
-\@setplength{firstheadwidth}{\paperwidth}
+\setplength{firstheadhpos}{0pt}
+\setplength{firstheadvpos}{0pt} %-1pt}
+\setplength{firstheadwidth}{\paperwidth}
 %Positionierung der Absenderergänzung
-\@setplength{lochpos}{\useplength{toaddrhpos}}
-\@setplength{locvpos}{6\UR@title@halfradius}
-\@setplength{locwidth}{\dimexpr(\paperwidth-10\UR@title@halfradius)/2-\useplength{lochpos}\relax}
-\@setplength{locheight}{\dimexpr\useplength{toaddrheight}+\useplength{toaddrvpos}-\useplength{locvpos}\relax}
+\setplength{lochpos}{\useplength{toaddrhpos}}
+\setplength{locvpos}{6\UR@title@halfradius}
+\setplength{locwidth}{\dimexpr(\paperwidth-10\UR@title@halfradius)/2-\useplength{lochpos}\relax}
+\setplength{locheight}{\dimexpr\useplength{toaddrheight}+\useplength{toaddrvpos}-\useplength{locvpos}\relax}
 
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 %Absenderergänzung
@@ -202,21 +202,21 @@
 		\fontsize{8}{8}\selectfont\textbf{\usekomavar*[\MakeUppercase]{faculty}\usekomavar[\MakeUppercase]{faculty}\\[1.5em]}
 		\fontsize{8}{8}\selectfont
 				\textbf{\UR@deanery@label\\[1.5pt]\usekomavar{fromname}}\\[1.5pt]
-				\ifkomavarempty{fromphone}{}{\usekomavar*{fromphone}\usekomavar{fromphone}\\[1.5pt]%
-				\ifkomavarempty{fromfax}{\null\hspace*{0cm}\\[1em]}{\usekomavar*{fromfax}\usekomavar{fromfax}\\[1.5pt]}}
-				\ifkomavarempty{fromroom}{}{\usekomavar*{fromroom} \usekomavar{fromroom}\\[1.5pt]}
+				\Ifkomavarempty{fromphone}{}{\usekomavar*{fromphone}\usekomavar{fromphone}\\[1.5pt]%
+				\Ifkomavarempty{fromfax}{\null\hspace*{0cm}\\[1em]}{\usekomavar*{fromfax}\usekomavar{fromfax}\\[1.5pt]}}
+				\Ifkomavarempty{fromroom}{}{\usekomavar*{fromroom} \usekomavar{fromroom}\\[1.5pt]}
 				\usekomavar{fromaddress}\\[1.5em]
-				\ifkomavarempty{fromemail}{}{\usekomavar*{fromemail}\usekomavar{fromemail}\\[1.5pt]}
-				\ifkomavarempty{fromurl}{}{\usekomavar*{fromemail}\usekomavar{fromurl}}
+				\Ifkomavarempty{fromemail}{}{\usekomavar*{fromemail}\usekomavar{fromemail}\\[1.5pt]}
+				\Ifkomavarempty{fromurl}{}{\usekomavar*{fromemail}\usekomavar{fromurl}}
 				\bool_if:NT \g_UR@locdate_bool {
 				\\[1.5em]
 				\vfill
-		    	{\ifkomavarempty{place}{}{%
+				{\Ifkomavarempty{place}{}{%
 						\usekomavar{place}\usekomavar{placeseparator}}%
 					\usekomavar{date}}%
 				}
-		
-		
+
+
 		}
 }{
 	\bool_if:NTF \g_UR@dean_bool {
@@ -228,20 +228,20 @@
 		\fontsize{8}{0}\selectfont
 				\textbf{\usekomavar{fromname}}\\[1.5pt]
 				%Absendertelefonnummer
-				\ifkomavarempty{fromphone}{}{\usekomavar*{fromphone}\usekomavar{fromphone}\\[1.5pt]} 
-				\ifkomavarempty{fromfax}{}{\usekomavar*{fromfax}\usekomavar{fromfax}\\[1.5pt]} %Absenderfax
-				\ifkomavarempty{fromroom}{}{\usekomavar*{fromroom} \usekomavar{fromroom}\\}
+				\Ifkomavarempty{fromphone}{}{\usekomavar*{fromphone}\usekomavar{fromphone}\\[1.5pt]}
+				\Ifkomavarempty{fromfax}{}{\usekomavar*{fromfax}\usekomavar{fromfax}\\[1.5pt]} %Absenderfax
+				\Ifkomavarempty{fromroom}{}{\usekomavar*{fromroom} \usekomavar{fromroom}\\}
 				%Sekretariat:
-				\ifkomavarempty{officephone}{}{Sekretariat:\\[1.5pt]
+				\Ifkomavarempty{officephone}{}{Sekretariat:\\[1.5pt]
 				\usekomavar*{officephone}\usekomavar{officephone}\\[1.5pt]
-				\ifkomavarempty{officefax}{}{\usekomavar*{officefax}\usekomavar{officefax}\\[1.5pt]}}
+				\Ifkomavarempty{officefax}{}{\usekomavar*{officefax}\usekomavar{officefax}\\[1.5pt]}}
 				\usekomavar{fromaddress}\\[1.5em]
-				\ifkomavarempty{fromemail}{}{\usekomavar{fromemail}\\[1.5pt]}
-				\ifkomavarempty{fromurl}{}{\usekomavar{fromurl}}
+				\Ifkomavarempty{fromemail}{}{\usekomavar{fromemail}\\[1.5pt]}
+				\Ifkomavarempty{fromurl}{}{\usekomavar{fromurl}}
 				\bool_if:NT \g_UR@locdate_bool {
 				\\[1.5em]
 				\vfill
-		    	{\ifkomavarempty{place}{}{%
+				{\Ifkomavarempty{place}{}{%
 						\usekomavar{place}\usekomavar{placeseparator}}%
 					\usekomavar{date}}%
 				}
@@ -252,39 +252,39 @@
 			\setlength{\parindent}{0pt}
 			\fontsize{6}{0}\selectfont
 			\sffamily\raggedright\par
-		%Einrichtung 
-		\ifkomavarempty{department}
-				{\ifkomavarempty{faculty}
+		%Einrichtung
+		\Ifkomavarempty{department}
+				{\Ifkomavarempty{faculty}
 										{\vspace*{\baselineskip}}
 										{\textbf{\usekomavar*[\MakeUppercase]{faculty}\usekomavar[\MakeUppercase]{faculty}\\[5pt]}}}
 				{\textbf{\usekomavar*[\MakeUppercase]{department}\usekomavar[\MakeUppercase]{department}\\[5pt]}}
 					\fontsize{12}{0}\selectfont
-					\ifkomavarempty{chair}
+					\Ifkomavarempty{chair}
 									{
-									\ifkomavarempty{institute}
+									\Ifkomavarempty{institute}
 										{\par\vspace{2.2cm}}
 										{\usekomavar*{institute}\usekomavar{institute}\\[1.5em]}
 									}
 									{\usekomavar*{chair}\usekomavar{chair}\\[1.5em]}
 		\fontsize{8}{0}\selectfont
-		\ifkomavarempty{fromname}{}{\textbf{\usekomavar{fromname}}\\[1.5pt]}
+		\Ifkomavarempty{fromname}{}{\textbf{\usekomavar{fromname}}\\[1.5pt]}
 		%Absendertelefonnummer
-		\ifkomavarempty{fromphone}{}{\usekomavar*{fromphone}\usekomavar{fromphone}\\[1.5pt] 
-		\ifkomavarempty{fromfax}{}{\usekomavar*{fromfax}\usekomavar{fromfax}\\[1.5pt]}}%Absenderfax
-		\ifkomavarempty{fromroom}{}{\usekomavar*{fromroom} \usekomavar{fromroom}\\[1.5pt]}
+		\Ifkomavarempty{fromphone}{}{\usekomavar*{fromphone}\usekomavar{fromphone}\\[1.5pt]
+		\Ifkomavarempty{fromfax}{}{\usekomavar*{fromfax}\usekomavar{fromfax}\\[1.5pt]}}%Absenderfax
+		\Ifkomavarempty{fromroom}{}{\usekomavar*{fromroom} \usekomavar{fromroom}\\[1.5pt]}
 		%Sekretariat:
-		\ifkomavarempty{officephone}{}{Sekretariat:\\[1.5pt]
+		\Ifkomavarempty{officephone}{}{Sekretariat:\\[1.5pt]
 		\usekomavar*{officephone}\usekomavar{officephone}
-		\ifkomavarempty{officefax}{\null\hspace*{0cm}\\[1em]}{\\[1.5pt]\usekomavar*{officefax}\usekomavar{officefax}\\[1.5pt]}}
+		\Ifkomavarempty{officefax}{\null\hspace*{0cm}\\[1em]}{\\[1.5pt]\usekomavar*{officefax}\usekomavar{officefax}\\[1.5pt]}}
 		\usekomavar{fromaddress}\\[1em]
-		\ifkomavarempty{fromemail}%
-			{\ifkomavarempty{fromurl}{}{\usekomavar{fromurl}}}%
+		\Ifkomavarempty{fromemail}%
+			{\Ifkomavarempty{fromurl}{}{\usekomavar{fromurl}}}%
 			{\usekomavar{fromemail}%
-				\ifkomavarempty{fromurl}{}{\\[1.5pt]\usekomavar{fromurl}}}
+				\Ifkomavarempty{fromurl}{}{\\[1.5pt]\usekomavar{fromurl}}}
 		\bool_if:NT \g_UR@locdate_bool {
 		\\[1.5em]
 		\vfill
-    	{\ifkomavarempty{place}{}{%
+		{\Ifkomavarempty{place}{}{%
 					\usekomavar{place}\usekomavar{placeseparator}}%
 				\usekomavar{date}}%
 		}
